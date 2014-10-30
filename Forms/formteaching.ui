@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormTeaching</class>
+ <widget class="QWidget" name="FormTeaching">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>398</width>
+    <height>151</height>
+   </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>151</height>
+   </size>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="labelSense">
+     <property name="text">
+      <string>&amp;Respuesta</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineEditOut</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="lineEditOut">
+     <property name="cursor">
+      <cursorShape>IBeamCursor</cursorShape>
+     </property>
+     <property name="cursorPosition">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="labelQuestion">
+     <property name="text">
+      <string>¿&amp;Que es eso?</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineEditInput</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="lineEditInput"/>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLabel" name="labelEmoticon">
+     <property name="toolTip">
+      <string>Animo del cerebro por este sentido</string>
+     </property>
+     <property name="statusTip">
+      <string>Animo del cerebro por sentido</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../imageResource.qrc">:/icons/sleep.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <layout class="QHBoxLayout" name="horizontalLayoutButtons">
+     <item>
+      <widget class="QLabel" name="labelCorrectTest">
+       <property name="text">
+        <string>¿correcto?</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonBadAnswer">
+       <property name="statusTip">
+        <string>respuesta incorrecta</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../imageResource.qrc">
+         <normaloff>:/icons/badAnswer.png</normaloff>:/icons/badAnswer.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonGoodAnswer">
+       <property name="statusTip">
+        <string>Respuesta correcta</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../imageResource.qrc">
+         <normaloff>:/icons/goodAnswer.png</normaloff>:/icons/goodAnswer.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonTeach">
+       <property name="statusTip">
+        <string>Luego de insertar respuesta Enseñe</string>
+       </property>
+       <property name="text">
+        <string>&amp;enseñar</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../imageResource.qrc">
+         <normaloff>:/icons/teaching.png</normaloff>:/icons/teaching.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonState">
+       <property name="statusTip">
+        <string>consultar neuronas que hicieron Hit</string>
+       </property>
+       <property name="text">
+        <string>&amp;Hits</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../imageResource.qrc">
+         <normaloff>:/icons/seeNet.png</normaloff>:/icons/seeNet.png</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../imageResource.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/badAnswer.png</file>
+        <file>icons/goodAnswer.png</file>
+        <file>icons/happy.png</file>
+        <file>icons/optimoZoom.png</file>
+        <file>icons/question.png</file>
+        <file>icons/Refresh.png</file>
+        <file>icons/sad.png</file>
+        <file>icons/seeNet.png</file>
+        <file>icons/zoomout.png</file>
+        <file>icons/ear.png</file>
+        <file>icons/eye.png</file>
+        <file>icons/clear.png</file>
+        <file>icons/brain.png</file>
+        <file>icons/process.png</file>
+        <file>icons/response.svg</file>
+        <file>icons/sleep.png</file>
+        <file>icons/think.png</file>
+        <file>icons/teaching.png</file>
+        <file>icons/questionword.png</file>
+        <file>icons/zoomin.png</file>
+        <file>icons/zoomreset.png</file>
+        <file>icons/consult.png</file>
+        <file>icons/statistic.png</file>
+        <file>icons/net.png</file>
+        <file>icons/tableNeuron.png</file>
+        <file>icons/exit.png</file>
+        <file>icons/cuda.png</file>
+        <file>icons/qt.jpeg</file>
+        <file>icons/nvidia-logo.jpg</file>
+    </qresource>
+</RCC>

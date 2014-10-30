@@ -1,0 +1,829 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>996</width>
+    <height>695</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>BrainCemisid-J&amp;J  v1.0</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../imageResource.qrc">
+    <normaloff>:/icons/brain.png</normaloff>:/icons/brain.png</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>32</width>
+    <height>32</height>
+   </size>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="font">
+         <font>
+          <family>Trebuchet MS</family>
+          <pointsize>22</pointsize>
+          <weight>50</weight>
+          <italic>false</italic>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>VISTA</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../imageResource.qrc">:/icons/eye.png</pixmap>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="2">
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Minimum</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>300</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="3">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="font">
+         <font>
+          <family>Trebuchet MS</family>
+          <pointsize>22</pointsize>
+          <weight>50</weight>
+          <italic>false</italic>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>OIDO</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="margin">
+         <number>2</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../imageResource.qrc">:/icons/ear.png</pixmap>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEditEarInput">
+        <property name="maximumSize">
+         <size>
+          <width>35</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0" colspan="4">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QWidget" name="widgetEye" native="true">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="1">
+          <layout class="QGridLayout" name="gridLayoutEye">
+           <item row="2" column="1">
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <item>
+              <widget class="QPushButton" name="buttonStateSight">
+               <property name="statusTip">
+                <string>Ver BNS de Vista en visor</string>
+               </property>
+               <property name="text">
+                <string>ver BNS</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../imageResource.qrc">
+                 <normaloff>:/icons/net.png</normaloff>:/icons/net.png</iconset>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonClearEye">
+               <property name="statusTip">
+                <string>Borrar estimulo del vista</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="../imageResource.qrc">
+                 <normaloff>:/icons/clear.png</normaloff>:/icons/clear.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>80</width>
+                 <height>60</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0">
+            <widget class="QTableWidget" name="tableWidgetColumnEye">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>45</number>
+             </attribute>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayoutEye"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QTableWidget" name="tableWidgetRowEye">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>45</number>
+             </attribute>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayoutInterfaceSight"/>
+         </item>
+         <item row="1" column="0">
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButtonBip">
+          <property name="statusTip">
+           <string>Añade Bips del protocolos Bum Bip Clack</string>
+          </property>
+          <property name="text">
+           <string>Bip</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButtonProcess">
+          <property name="statusTip">
+           <string>Procesar Informacion de sentidos (BUM)</string>
+          </property>
+          <property name="text">
+           <string>&amp;Procesar</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../imageResource.qrc">
+            <normaloff>:/icons/process.png</normaloff>:/icons/process.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widgetEar" native="true">
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <layout class="QGridLayout" name="gridLayoutEar">
+           <item row="3" column="0">
+            <widget class="QTableWidget" name="tableWidgetColumnEar">
+             <property name="baseSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>45</number>
+             </attribute>
+             <attribute name="horizontalHeaderMinimumSectionSize">
+              <number>57</number>
+             </attribute>
+             <attribute name="verticalHeaderDefaultSectionSize">
+              <number>30</number>
+             </attribute>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayoutEar"/>
+           </item>
+           <item row="3" column="1">
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <item>
+              <widget class="QPushButton" name="buttonStateHearing">
+               <property name="statusTip">
+                <string>Ver BNS de Oido en visor</string>
+               </property>
+               <property name="text">
+                <string>ver BNS</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../imageResource.qrc">
+                 <normaloff>:/icons/net.png</normaloff>:/icons/net.png</iconset>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonClearEar">
+               <property name="statusTip">
+                <string>Borrar estimulo del oido</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="../imageResource.qrc">
+                 <normaloff>:/icons/clear.png</normaloff>:/icons/clear.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>80</width>
+                 <height>60</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="1">
+            <widget class="QTableWidget" name="tableWidgetRowEar">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>45</number>
+             </attribute>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="5" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayoutInterfaceEar">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="6" column="2">
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QPushButton" name="pushButton_stopCount">
+        <property name="text">
+         <string>Cerrar Interfaz de Conteo</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextBrowser" name="textBrowser">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_teachBip">
+        <property name="text">
+         <string>Bip</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_teachClack">
+        <property name="text">
+         <string>Clack</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="5" column="3" rowspan="2">
+     <spacer name="verticalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="5" column="2">
+     <widget class="QPushButton" name="pushButton_startCount">
+      <property name="text">
+       <string>Abrir Interfaz de Conteo</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <spacer name="horizontalSpacer_4">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="4" column="2">
+     <widget class="QLabel" name="label_5">
+      <property name="font">
+       <font>
+        <pointsize>17</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Conteo</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>996</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_Acerca_de">
+    <property name="title">
+     <string>&amp;Acerca de..</string>
+    </property>
+    <addaction name="actionBrain_Cemisid_J_J"/>
+    <addaction name="actionQt"/>
+    <addaction name="actionCuda"/>
+   </widget>
+   <widget class="QMenu" name="menuMenu">
+    <property name="title">
+     <string>&amp;Menu</string>
+    </property>
+    <addaction name="actionConsult"/>
+    <addaction name="actionStatistic"/>
+    <addaction name="actionTableNeuron"/>
+    <addaction name="separator"/>
+    <addaction name="action_Hardware_Nvidia"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menuMenu"/>
+   <addaction name="menu_Acerca_de"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionQt">
+   <property name="icon">
+    <iconset resource="../imageResource.qrc">
+     <normaloff>:/icons/qt.jpeg</normaloff>:/icons/qt.jpeg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Qt</string>
+   </property>
+  </action>
+  <action name="actionConsult">
+   <property name="icon">
+    <iconset resource="../imageResource.qrc">
+     <normaloff>:/icons/consult.png</normaloff>:/icons/consult.png</iconset>
+   </property>
+   <property name="text">
+    <string>Consultar &amp;Neurona</string>
+   </property>
+   <property name="statusTip">
+    <string>Descomprimir Informacion de una neurona</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionStatistic">
+   <property name="icon">
+    <iconset resource="../imageResource.qrc">
+     <normaloff>:/icons/statistic.png</normaloff>:/icons/statistic.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Consultar estadisticas</string>
+   </property>
+   <property name="statusTip">
+    <string>Consulta Estadisticas de la aplicacion</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionTableNeuron">
+   <property name="icon">
+    <iconset resource="../imageResource.qrc">
+     <normaloff>:/icons/tableNeuron.png</normaloff>:/icons/tableNeuron.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Visualizar Tabla Neuronal</string>
+   </property>
+   <property name="statusTip">
+    <string>Ver estado de cada bloque neuronal Sensorial (BNS)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="toolBarAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Barra &amp;Herramientas</string>
+   </property>
+   <property name="iconText">
+    <string>Barra Herramientas</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="../imageResource.qrc">
+     <normaloff>:/icons/exit.png</normaloff>:/icons/exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Salir</string>
+   </property>
+   <property name="statusTip">
+    <string>salir de aplicacion</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionCuda">
+   <property name="icon">
+    <iconset resource="../imageResource.qrc">
+     <normaloff>:/icons/cuda.png</normaloff>:/icons/cuda.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;CUDA</string>
+   </property>
+  </action>
+  <action name="actionBrain_Cemisid_J_J">
+   <property name="icon">
+    <iconset resource="../imageResource.qrc">
+     <normaloff>:/icons/brain.png</normaloff>:/icons/brain.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Brain Cemisid</string>
+   </property>
+  </action>
+  <action name="action_Hardware_Nvidia">
+   <property name="icon">
+    <iconset resource="../imageResource.qrc">
+     <normaloff>:/icons/nvidia-logo.jpg</normaloff>:/icons/nvidia-logo.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Hardware Nvidia</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="../imageResource.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>pushButtonProcess</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>processGrid()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>438</x>
+     <y>313</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>397</x>
+     <y>88</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionConsult</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showDialogConsult()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStatistic</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showDialogStatistic()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTableNeuron</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showDialogTableNeuron()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonStateSight</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>paintSight()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>335</x>
+     <y>370</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>441</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonStateHearing</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>paintHearing()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>698</x>
+     <y>369</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Hardware_Nvidia</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showSelectDevice(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCuda</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>aboutCuda()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionBrain_Cemisid_J_J</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>aboutBrainCemisid()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonBip</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>repaint()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>417</x>
+     <y>308</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>processGrid()</slot>
+  <slot>paintHearing()</slot>
+  <slot>paintSight()</slot>
+  <slot>showDialogConsult()</slot>
+  <slot>showDialogStatistic()</slot>
+  <slot>showDialogTableNeuron()</slot>
+  <slot>enableToolBar(bool)</slot>
+  <slot>showSelectDevice(bool)</slot>
+  <slot>aboutBrainCemisid()</slot>
+  <slot>aboutCuda()</slot>
+ </slots>
+</ui>

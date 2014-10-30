@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogConsultNeuron</class>
+ <widget class="QDialog" name="DialogConsultNeuron">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>460</width>
+    <height>160</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>460</width>
+    <height>160</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>460</width>
+    <height>160</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Consulte por neurona informacion Descomprimida</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../imageResource.qrc">
+    <normaloff>:/icons/consult.png</normaloff>:/icons/consult.png</iconset>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="lineEdit">
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string/>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="placeholderText">
+        <string>ingrese Id de Neurona con conocimiento</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QRadioButton" name="radioButtonSight">
+         <property name="text">
+          <string>Vista</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButtonHearing">
+         <property name="text">
+          <string>Oido</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Ingrese id Neurona</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelLimits">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../imageResource.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>radioButtonHearing</sender>
+   <signal>clicked()</signal>
+   <receiver>DialogConsultNeuron</receiver>
+   <slot>changeHearing()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>96</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>229</x>
+     <y>79</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonSight</sender>
+   <signal>clicked()</signal>
+   <receiver>DialogConsultNeuron</receiver>
+   <slot>changeSight()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>61</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>229</x>
+     <y>79</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>DialogConsultNeuron</receiver>
+   <slot>checkText()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>297</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>229</x>
+     <y>79</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>DialogConsultNeuron</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>297</x>
+     <y>136</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>229</x>
+     <y>79</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>DialogConsultNeuron</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>297</x>
+     <y>136</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>229</x>
+     <y>79</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>changeSight()</slot>
+  <slot>changeHearing()</slot>
+  <slot>checkText()</slot>
+ </slots>
+</ui>

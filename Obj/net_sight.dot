@@ -1,0 +1,19 @@
+graph net_neuron{
+rankdir=LR;
+subgraph cluster_0{ }
+subgraph cluster_1{ }
+subgraph cluster_2{ }
+subgraph cluster_3{ }
+subgraph cluster_4{ "item1" [label=  "id neurona = 1\nCategoria= 4"];
+}
+subgraph cluster_5{ }
+subgraph cluster_6{ }
+subgraph cluster_7{ }
+subgraph cluster_8{ "item0" [label=  "id neurona = 0\nCategoria= 8"];
+}
+subgraph cluster_9{ }
+subgraph cluster_10{ }
+subgraph cluster_11{ }
+subgraph cluster_12{ }
+
+}
