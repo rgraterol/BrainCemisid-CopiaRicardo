@@ -762,16 +762,16 @@ void MainWindow::initializeTable()
 
 /*===============================INICIALIZANDO NEURONAS DE CONTEO Y ORDEN*========================================*/
 
-int kNeuron =0;
-int orderNeuron =0;
+int kNeuron =1;
+int orderNeuron =1;
 
 /*===================================================================================================================*/
 
 void MainWindow::intitializeSenses(int numSenses)
 {
     int calc;
-    orderNeuron=0;
-    kNeuron=0;
+    orderNeuron=1;
+    kNeuron=1;
     this->numSenses=numSenses;
     int numNeuron=calculateNumNeuron();
 
@@ -782,7 +782,6 @@ void MainWindow::intitializeSenses(int numSenses)
     sizeNet.numNeuron=numNeuron;
 
 
-    countNetwork = new CountNetwork;
     orderNetwork = new OrderNetwork;
 
     calc = sizeNet.numNeuron * sizeof(unsigned char);
@@ -792,10 +791,21 @@ void MainWindow::intitializeSenses(int numSenses)
 
     orderNetwork->countNet = new CountNetwork [sizeNet.numNeuron];
 
+    countNetwork = new CountNetwork;
+    countNetwork->vectorNetworkCount = new unsigned char [sizeNet.numNeuron * 32];
+    countNetwork->vectorPointerCount = new unsigned char [sizeNet.numNeuron * 9];
+    countNetwork->bipPointer = new unsigned char [sizeNet.numNeuron * 9];
+    countNetwork->clackPointer = new unsigned char [sizeNet.numNeuron * 9];
+    countNetwork->ptr = new unsigned char (1);
+
+    orderNetwork->bumPointer = new unsigned char [sizeNet.numNeuron * 9];
+    orderNetwork->category = new unsigned char [sizeNet.numNeuron * 32];
+    orderNetwork->order = new unsigned char [sizeNet.numNeuron * 32];
+
     for(register int i=0; i<sizeNet.numNeuron; i++) {
         orderNetwork->countNet[i].vectorNetworkCount = new unsigned char [sizeNet.numNeuron * 32];
         orderNetwork->countNet[i].vectorPointerCount = new unsigned char [sizeNet.numNeuron * 9];
-        orderNetwork->countNet[i].ptr = new unsigned char (0);
+        orderNetwork->countNet[i].ptr = new unsigned char (1);
     }
 
     for (register int i = 0; i < numSenses; i++) {
@@ -1212,7 +1222,7 @@ void MainWindow::stopCount() {
 void MainWindow::countProtocol()
 {
     ui->pushButton_teachClack->setEnabled(true);
-   if(kNeuron==0) {
+   /*if(kNeuron==0) {
         orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
         orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=kNeuron+1;
     }
@@ -1221,23 +1231,48 @@ void MainWindow::countProtocol()
         orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
         orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=kNeuron+1;
     }
-    //activateInterface(false);
-    kNeuron++;
+    if(orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]!=1) {
+        orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
+        orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=orderNeuron+1;
+    }
+    else {
+        std::cout<<"Numero ya Conocido"<<endl;
+    }
+    //activateInterface(false);*/
+    if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
+        std::cout<<"Numero ya Conocido"<<endl;
+    }
+    else {
+        countNetwork->vectorNetworkCount[kNeuron]= 1;
+        countNetwork->bipPointer[kNeuron]=kNeuron+1;
+        std::cout<<"Numero Desconocido"<<endl;
+    }
     QString cN = QString::number(kNeuron);
     QString oN = QString::number(orderNeuron);
-    ui->textBrowser->setText("Neurona K: "+ cN+"\nNeurona O: "+oN);
-
+    /*if(orderNetwork->countNet[kNeuron].vectorNetworkCount[kNeuron] == 1 ) {
+        ui->textBrowser->setText("Numero ya conocido\nNeurona K: "+ cN+"\nNeurona O: "+oN);
+    }
+    else {
+        ui->textBrowser->setText("Numero desconocido\nNeurona K: "+ cN+"\nNeurona O: "+oN);
+    }*/
+    kNeuron++;
 }
 
 void MainWindow::orderProtocol() {
     ui->pushButton_teachClack->setEnabled(false);
-    orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
-    orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=0;
-    kNeuron=0;
-    orderNeuron++;
+    /*orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
+    orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=0;*/
+
+   // orderNetwork->countNet[kNeuron].vectorNetworkCount[kNeuron] = 1;
+   // orderNetwork->countNet[kNeuron].vectorPointerCount[kNeuron]= countNetwork->vectorPointerCount[kNeuron]-1;
+
+    //orderNeuron++;
+
+    kNeuron=1;
+    orderNeuron=1;
     QString cN = QString::number(kNeuron);
-    QString oN = QString::number(orderNeuron);
-    ui->textBrowser->setText("Neurona K: "+ cN+"\nNeurona O: "+oN);
+    QString oN = QString::number(kNeuron);
+    ui->textBrowser->setText("Numero Asimilado \nNeurona K: "+ cN+"\nNeurona O: "+oN);
 }
 
 /*QString getStringFromUnsignedChar(unsigned char *str)

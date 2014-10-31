@@ -6,6 +6,8 @@
 struct CountNetwork {
     unsigned char * vectorNetworkCount;
     unsigned char * vectorPointerCount;
+    unsigned char * bipPointer;
+    unsigned char * clackPointer;
 
     unsigned char * vectorFlagsCount;
     unsigned char * ptr;
@@ -18,6 +20,8 @@ struct OrderNetwork {
 
     CountNetwork * countNet;
     unsigned char * vectorNetworkOrder;
+    unsigned char * order;
+    unsigned char * bumPointer;
     unsigned char * category;
 };
 
