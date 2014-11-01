@@ -764,6 +764,7 @@ void MainWindow::initializeTable()
 
 int kNeuron =1;
 int orderNeuron =1;
+int kAux = 0;
 
 /*===================================================================================================================*/
 
@@ -1267,11 +1268,14 @@ void MainWindow::orderProtocol() {
    // orderNetwork->countNet[kNeuron].vectorPointerCount[kNeuron]= countNetwork->vectorPointerCount[kNeuron]-1;
 
     //orderNeuron++;
-
+    countNetwork->clackPointer[kNeuron] = kNeuron;
+    orderNetwork->order[kNeuron] = 1;
+    orderNetwork->bumPointer[kNeuron] = 1;
+    kAux = kNeuron;
     kNeuron=1;
     orderNeuron=1;
     QString cN = QString::number(kNeuron);
-    QString oN = QString::number(kNeuron);
+    QString oN = QString::number(kAux);
     ui->textBrowser->setText("Numero Asimilado \nNeurona K: "+ cN+"\nNeurona O: "+oN);
 }
 
