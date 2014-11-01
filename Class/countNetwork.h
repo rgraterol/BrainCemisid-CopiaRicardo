@@ -23,6 +23,7 @@ struct OrderNetwork {
     unsigned char * order;
     unsigned char * bumPointer;
     unsigned char * category;
+    unsigned char * numRelation;
 };
 
 /*struct SizeCountNet{

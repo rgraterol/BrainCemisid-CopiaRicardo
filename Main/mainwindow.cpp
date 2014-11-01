@@ -1190,7 +1190,15 @@ void MainWindow::actualiceCategory(unsigned char earCat, unsigned char sightid){
 
 /*==================================TESIS RICARDO GRATEROL====================================*/
 
-void MainWindow::on_pushButtonBip_clicked() {}
+void MainWindow::on_pushButtonBip_clicked() {
+    if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
+        std::cout<<"Entiendo esta cantidad"<<endl;
+    }
+    else {
+        std::cout<<"Confundido"<<endl;
+    }
+    kNeuron++;
+}
 
 void MainWindow::printCountNetwork() {
     for(register int i=0; i<kNeuron ; i++) {
@@ -1241,12 +1249,12 @@ void MainWindow::countProtocol()
     }
     //activateInterface(false);*/
     if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
-        std::cout<<"Numero ya Conocido"<<endl;
+        std::cout<<"Cantidad conocida"<<endl;
     }
     else {
         countNetwork->vectorNetworkCount[kNeuron]= 1;
         countNetwork->bipPointer[kNeuron]=kNeuron+1;
-        std::cout<<"Numero Desconocido"<<endl;
+        std::cout<<"Cantidad Desconocida"<<endl;
     }
     QString cN = QString::number(kNeuron);
     QString oN = QString::number(orderNeuron);
