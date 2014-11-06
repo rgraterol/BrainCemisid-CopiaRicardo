@@ -16,6 +16,6 @@ struct Statistic{
     }
 };
 
-enum kernels{BOOT,RECOGNIZE,CORRECT,RESET };
+enum kernels{BOOT,RECOGNIZE,CORRECT,RESET, SAFERELATION };
 
 #endif // STATISTIC_H

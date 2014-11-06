@@ -42,7 +42,8 @@ HEADERS  += Main/mainwindow.h \
     Graphics/dialogstatistics.h \
     Graphics/dialogtablebns.h \
     Class/relationNetwork.h \
-    Class/countNetwork.h
+    Class/countNetwork.h \
+    Class/culturalNet.h
 
 FORMS    += Forms/mainwindow.ui \
     Forms/formteaching.ui \

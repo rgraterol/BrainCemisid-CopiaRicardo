@@ -30,6 +30,7 @@
 #include "Class/relationNetwork.h"
 
 #include "Class/countNetwork.h"
+#include "Class/culturalNet.h"
 
 namespace Ui {
 class MainWindow;
@@ -107,6 +108,7 @@ private:
     cudaDeviceProp       deviceProp;
 
     RelationNetwork *relationSenses;
+    CulturalNet *addNet;
 
     bool               * isInactivateSense;
     int numSenses;
@@ -153,6 +155,10 @@ private:
     void buildRelation (unsigned char);
     void initializeRelation(int);
     unsigned char checkInRelationNet();
+    void think(senses senses);
+    void initializeCuturalNet(int);
+    void freeCulturalNet();
+
 
 
     //templates

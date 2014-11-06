@@ -8,17 +8,32 @@
 #include "../Class/interface.h"
 #include "../Class/neuralNetwork.h"
 #include "../Class/statistic.h"
+#include "../Class/relationNetwork.h"
+#include "../Class/culturalNet.h"
+#include "../Class/countNetwork.h"
 
 
 #define  RATIO               22
 #define  MIN_RATIO           2
+#define  TAMWORD             5
 
 //cuda kernel prototypes
 __global__ void  correct  ( unsigned char * d_vectorFlags , unsigned char * d_ptr, unsigned char *d_desiredOutput);
+
 __global__ void  reset    ( unsigned char * d_vectorFlags , unsigned char *d_ptr);
+
 __global__ void  recognize( unsigned char * d_vectorNeuron, unsigned char *d_vectorFlags,
                             unsigned char * d_pattern     , int *d_countHit, unsigned char *d_ptr,
                             unsigned char * d_arrayCategory  , unsigned char* d_idsNeuron,Lock lock);
+
+__global__ void safeRelation(unsigned char *d_vectorFlags, int *d_countHit,
+
+                             unsigned char *d_idsNeuron, unsigned char *d_vectorEar,
+                             unsigned char *d_vectorSigth, stateNeuralNetwork *stateSense,
+                             unsigned char *d_wishCategory);
+__global__ void newItemCulturalNet(unsigned char * d_data, bool d_valve, bool trueKNW);
+
+
 // methods prototype
 template<class T>
 inline bool equal(T a, T b);
@@ -62,11 +77,11 @@ void boot(NeuralNetwork * & neuralSenses,const SizeNet & sizeNet, Statistic * & 
 
 extern "C"
 stateNeuralNetwork recognize(NeuralNetwork * neuralSenses, const SizeNet & sizeNet,
-                             unsigned char * h_pattern, Interface * interface, Statistic *& statistic)
+                             unsigned char * h_pattern, Interface * interface, Statistic *& statistic, unsigned char * neuronOrder)
 {
     int * d_countHit;
     unsigned char * d_arrayCategory,*d_idsNeuron;
-    unsigned char * d_vectorNeuron,* d_vectorFlags,*d_pattern,*d_ptr;
+    unsigned char * d_vectorNeuron,* d_vectorFlags,*d_pattern,*d_ptr, *d_orderNeuron, *d_orderFlag;
     stateNeuralNetwork state;
 
     dim3 blockSize (SIZE_CHARACTERISTIC);
@@ -84,6 +99,10 @@ stateNeuralNetwork recognize(NeuralNetwork * neuralSenses, const SizeNet & sizeN
     checkCudaErrors(cudaMalloc( &d_idsNeuron   , sizeof(unsigned char) * (*(neuralSenses->ptr))));
     checkCudaErrors(cudaMalloc( &d_ptr         , sizeof(unsigned char)));
     checkCudaErrors(cudaMalloc( &d_countHit    , sizeof(int)));
+
+    //CONTEO
+    checkCudaErrors(cudaMalloc( &d_orderNeuron, sizeNet.sizeVectorNeuron));
+    checkCudaErrors(cudaMalloc( &d_orderFlag, sizeNet.sizevectorFlags));
 
     // copy from host to device
     checkCudaErrors( cudaMemcpy( d_vectorNeuron, neuralSenses->vectorNeuron ,sizeNet.sizeVectorNeuron, cudaMemcpyHostToDevice ) );
@@ -106,6 +125,7 @@ stateNeuralNetwork recognize(NeuralNetwork * neuralSenses, const SizeNet & sizeN
     checkCudaErrors( cudaMemcpy( neuralSenses->vectorNeuron , d_vectorNeuron, sizeNet.sizeVectorNeuron, cudaMemcpyDeviceToHost ) );
     checkCudaErrors( cudaMemcpy( neuralSenses->vectorFlags  , d_vectorFlags , sizeNet.sizevectorFlags , cudaMemcpyDeviceToHost ) );
     checkCudaErrors( cudaMemcpy( neuralSenses->ptr          , d_ptr         , sizeof(unsigned char)   , cudaMemcpyDeviceToHost ) );
+
     interface->freeMem();
     interface->setHit();
     checkCudaErrors(cudaMemcpy(interface->arrayCategory,d_arrayCategory ,sizeof(unsigned char)*(* (interface->hits)),cudaMemcpyDeviceToHost));
@@ -179,7 +199,7 @@ void correct(NeuralNetwork * neuralSenses , const SizeNet & sizeNet,
 
 extern "C"
 void reset(NeuralNetwork * neuralSenses , const SizeNet & sizeNet, int maxThreadsPerBlock, Statistic *&statistic)
-{   
+{
     unsigned char * d_vectorFlags,* d_ptr;
 
     dim3 blockSize (maxThreadsPerBlock);
@@ -214,6 +234,114 @@ void reset(NeuralNetwork * neuralSenses , const SizeNet & sizeNet, int maxThread
     checkCudaErrors(cudaFree(d_ptr));
 }
 
+extern "C"
+void safeRelation(NeuralNetwork *  neuralSenses, const SizeNet & sizeNet, RelationNetwork relationSenses,
+                  Statistic * & statistic, Interface * interface, stateNeuralNetwork *stateSense, unsigned char *whisCategory){
+    int * d_countHit;
+    stateNeuralNetwork *d_stateSense;
+    unsigned char *d_idsNeuron, *d_whisCategory;
+    unsigned char * d_vectorFlags;
+    unsigned char * d_vectorEar, *d_vectorSigth;
+
+
+    dim3 blockSize (SIZE_CHARACTERISTIC);
+    dim3 gridSize  ( (*neuralSenses->ptr) +1 );
+    GpuTimer timer;
+
+
+    // It allocates memory on the device
+    checkCudaErrors(cudaMalloc( &d_vectorFlags , sizeNet.sizevectorFlags ) );
+    checkCudaErrors(cudaMalloc( &d_idsNeuron   , sizeof(unsigned char) * (*(neuralSenses->ptr))));
+    checkCudaErrors(cudaMalloc( &d_countHit    , sizeof(int)));
+    checkCudaErrors(cudaMalloc( &d_stateSense    , sizeof(int)));
+    checkCudaErrors(cudaMalloc( &d_vectorEar, sizeof(unsigned char) * relationSenses.sizeRelationNet) );
+    checkCudaErrors(cudaMalloc( &d_vectorSigth, sizeof(unsigned char) * relationSenses.sizeRelationNet) );
+
+    // copy from host to device
+    checkCudaErrors( cudaMemcpy( d_vectorFlags , neuralSenses->vectorFlags  ,sizeNet.sizevectorFlags , cudaMemcpyHostToDevice ) );
+    checkCudaErrors( cudaMemcpy( d_whisCategory, whisCategory               ,sizeof(unsigned char)   , cudaMemcpyHostToDevice ) );
+
+    checkCudaErrors( cudaMemcpy( d_idsNeuron, interface->id,*interface->hits, cudaMemcpyHostToDevice ) );
+    checkCudaErrors( cudaMemcpy( d_countHit    , interface->hits            , sizeof(int)             , cudaMemcpyHostToDevice ) );
+    checkCudaErrors( cudaMemcpy( d_stateSense     , stateSense                    , sizeof (int), cudaMemcpyHostToDevice));
+    //checkCudaErrors( cudaMemcpy( d_sizeRelationNet, relationSenses.sizeRelationNet, sizeof (int), cudaMemcpyHostToDevice));
+
+    checkCudaErrors( cudaMemcpy( d_vectorEar , relationSenses.vectorEar ,relationSenses.sizeRelationNet, cudaMemcpyHostToDevice ) );
+    checkCudaErrors( cudaMemcpy( d_vectorSigth , relationSenses.vectorSight ,relationSenses.sizeRelationNet, cudaMemcpyHostToDevice ) );
+
+    //call kernel saveRelation
+    timer.Start();
+    safeRelation<<<gridSize,blockSize>>>(d_vectorFlags,d_countHit,d_idsNeuron, d_vectorEar, d_vectorSigth, d_stateSense, d_whisCategory);
+    timer.Stop();
+
+    checkCudaErrors(cudaDeviceSynchronize());
+    checkCudaErrors(cudaGetLastError());
+    calculateStatistic(timer.Elapsed(),statistic,SAFERELATION);
+
+    // copy from device to host
+    checkCudaErrors( cudaMemcpy( interface->hits, d_countHit, sizeof(int), cudaMemcpyDeviceToHost ) );
+    checkCudaErrors( cudaMemcpy( neuralSenses->vectorFlags  , d_vectorFlags , sizeNet.sizevectorFlags , cudaMemcpyDeviceToHost ) );
+
+    interface->freeMem();
+
+    checkCudaErrors(cudaMemcpy(interface->id        ,d_idsNeuron  ,sizeof(unsigned char)*(* (interface->hits)),cudaMemcpyDeviceToHost));
+
+    checkCudaErrors( cudaMemcpy( relationSenses.vectorEar , d_vectorEar, relationSenses.sizeRelationNet, cudaMemcpyDeviceToHost ) );
+    checkCudaErrors( cudaMemcpy( relationSenses.vectorSight , d_vectorSigth, relationSenses.sizeRelationNet, cudaMemcpyDeviceToHost ) );
+    //checkCudaErrors( cudaMemcpy( relationSenses.sizeRelationNet, d_sizeRelationNet, sizeof(int), cudaMemcpyDeviceToHost ) );
+
+    // Free memory on device Reserved
+    checkCudaErrors(cudaFree(d_vectorFlags));
+    checkCudaErrors(cudaFree(d_countHit));
+
+    checkCudaErrors(cudaFree(d_whisCategory));
+
+    checkCudaErrors(cudaFree(d_idsNeuron));
+
+    checkCudaErrors(cudaFree(d_vectorEar));
+    checkCudaErrors(cudaFree(d_vectorSigth));
+
+}
+
+/*extern "C"
+void newItemCulturalNet(CulturalNet * addNet, int protocol, int LPA, int LPT ){
+
+    unsigned char * d_data, *d_valve, *trueKNW,  *d_LPA, *d_LPT, *d_newData;
+    int d_protocol;
+
+    dim3 blockSize (1);
+    dim3 gridSize  ( 100);
+    GpuTimer timer;
+
+
+    // It allocates memory on the device
+    checkCudaErrors(cudaMalloc( &d_data   , sizeof(unsigned char) * (*(neuralSenses->ptr))));
+    checkCudaErrors(cudaMalloc( &d_data , sizeNet.sizevectorFlags ) );
+
+
+    // copy from host to device
+    checkCudaErrors( cudaMemcpy( d_vectorFlags , neuralSenses->vectorFlags  ,sizeNet.sizevectorFlags , cudaMemcpyHostToDevice ) );
+
+
+    //call kernel saveRelation
+    timer.Start();
+    newItemCulturalNet(<<< * d_data, *d_valve, trueKNW, d_protocol, d_LPA, d_LPT, d_newData>>>);
+    timer.Stop();
+
+    checkCudaErrors(cudaDeviceSynchronize());
+    checkCudaErrors(cudaGetLastError());
+    calculateStatistic(timer.Elapsed(),statistic,SAFERELATION);
+
+    // copy from device to host
+    checkCudaErrors( cudaMemcpy( interface->hits, d_countHit, sizeof(int), cudaMemcpyDeviceToHost ) );
+
+
+    // Free memory on device Reserved
+    checkCudaErrors(cudaFree(d_vectorFlags));
+
+}*/
+
+
 // methods
 template<class T>
 bool equal(T a, T b){
@@ -234,6 +362,30 @@ bool compare(T array[], int sizeArray)
 }
 
 //cuda kernel
+__global__ void  safeRelation(unsigned char *d_vectorFlags,
+                              int *d_countHit,
+                              unsigned char *d_idsNeuron,  unsigned char *d_vectorEar,
+                              unsigned char *d_vectorSigth, stateNeuralNetwork *stateSense, unsigned char * d_whisCategory)
+{
+
+    int flagIndex   = threadIdx.x + SIZE_FLAGS  * blockIdx.x;
+    if(*stateSense == DIFF){
+        for(int i = 0; i < *d_countHit; i++){
+            if (blockIdx.x == d_idsNeuron[i]){
+                d_vectorFlags[flagIndex + CAT] = *d_whisCategory;
+            }
+        }
+        if(threadIdx.x == 0){
+            for(int j = 0;j<*d_countHit; j++){
+                if ( d_vectorEar[blockIdx.x] == d_idsNeuron[j] ){
+                    d_vectorSigth[blockIdx.x] = *d_whisCategory;
+                }
+            }
+        }
+    }
+
+
+}
 __global__ void  recognize(unsigned char * d_vectorNeuron, unsigned char *d_vectorFlags,
                            unsigned char *d_pattern, int *d_countHit, unsigned char *d_ptr,
                            unsigned char *d_arrayCategory, unsigned char *d_idsNeuron, Lock lock){
@@ -331,17 +483,30 @@ __global__ void reset(unsigned char *d_vectorFlags, unsigned char *d_ptr)
         d_vectorFlags[ indexGlobal * SIZE_FLAGS + HIT ] = 0;
 }
 
-
 void calculateStatistic(const float &currentTime, Statistic *&statistic, kernels kernel)
 {
-     statistic[kernel].numExecutions++;
-     statistic[kernel].accumulateTime += currentTime;
+    statistic[kernel].numExecutions++;
+    statistic[kernel].accumulateTime += currentTime;
 
-     if(statistic[kernel].minTime >currentTime)
-         statistic[kernel].minTime = currentTime;
+    if(statistic[kernel].minTime >currentTime)
+        statistic[kernel].minTime = currentTime;
 
-     if(statistic [kernel].maxTime < currentTime)
-         statistic[kernel].maxTime =currentTime;
+    if(statistic [kernel].maxTime < currentTime)
+        statistic[kernel].maxTime =currentTime;
+}
+
+__global__ void newItemCulturalNet(unsigned char * d_data, bool *d_valve, bool trueKNW, int d_protocol, int d_LPA, int d_LPT, unsigned char d_newData)
+{
+    int columna = 0;
+    int level = 0;
+    level = blockIdx.x % 5;
+    columna = blockIdx.x/TAMWORD;
+    if (d_LPA == columna){
+        if(d_LPT == level){
+            d_data[blockIdx.x] = d_newData;
+            d_valve[blockIdx.x] = true;
+        }
+    }
 }
 
 void debugTimer(GpuTimer timer){

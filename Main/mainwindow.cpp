@@ -8,12 +8,15 @@ void boot(NeuralNetwork * & neuralSenses,const SizeNet & sizeNet, Statistic * & 
 
 extern "C"
 stateNeuralNetwork recognize(NeuralNetwork *  neuralSenses,const SizeNet & sizeNet,
-                             unsigned char * h_pattern , Interface * interface, Statistic * & statistic);
+                             unsigned char * h_pattern , Interface * interface, Statistic * & statistic, unsigned char * orderNeuron);
 extern "C"
 void correct(NeuralNetwork * neuralSenses , const SizeNet & sizeNet,
              unsigned char   desiredOutput, int maxThreadsPerBlock ,Statistic * &statistic);
 extern "C"
 void reset(NeuralNetwork * neuralSenses , const SizeNet & sizeNet,int maxThreadsPerBlock,Statistic *& statistic);
+
+extern "C"
+void newItemCulturalNet(CulturalNet * addNet, int protocol, int LPA, int LPT );
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -140,7 +143,49 @@ void MainWindow::generateVectorsCharacteristic()
     characteristicVectorEar = chemicalLayerEar->generateCharacteristic();
     characteristicVectorEye = chemicalLayerEye->generateCharacteristic();
 }
+int kNeuron =1;
+int orderNeuron =1;
+unsigned char * aux;
 
+/*void MainWindow::on_pushButton_prueba_clicked() {
+    int id, category,centinel;
+    unsigned char * vector=   interface[SIGHT].arrayCategory ;
+    centinel= (true) ?*(interface[SIGHT].hits) : *(neuralSenses[SIGHT].ptr);
+    for(int j=0; j <= 12;j++){
+        std::cout<<"subgraph cluster_"<<j<<"{ ";
+
+        for (int i = 0; i < centinel ; i++) {
+
+            id=(true) ? interface[SIGHT].id[i] : i;
+            category=vector[i];
+
+            if(category != j){
+
+                if(j==11 && category==43)
+                    std::cout<<"\"item"<<id<<"\" [label=  \"id neurona = "<<id<<"\\nCategoria = '+'\"];\n";
+                if(j==12 && category==61)
+                    std::cout<<"\"item"<<id<<"\" [label=  \"id neurona = "<<id<<"\\nCategoria = '='\"];\n";
+            }
+
+            else
+                std::cout<<"\"item"<<id<<"\" [label=  \"id neurona = "<<id<<"\\nCategoria= "<<category<<"\"];\n";
+
+        }
+
+        std::cout<<"}\n";
+    }
+
+}*/
+
+void MainWindow::on_pushButtonBip_clicked() {
+    if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
+        std::cout<<"Entiendo esta cantidad"<<endl;
+    }
+    else {
+        std::cout<<"Confundido"<<endl;
+    }
+    kNeuron++;
+}
 
 void MainWindow::processGrid()
 {
@@ -150,16 +195,24 @@ void MainWindow::processGrid()
     if(!chemicalLayerEye->getNoData())
     {
         try {
+            if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
+                stateSenses  [SIGHT]   = recognize(&neuralSenses[SIGHT]  ,sizeNet,characteristicVectorEye,&interface[SIGHT],statistics, aux);
+                if( stateSenses[SIGHT] == IS_HIT ){
+                    orderNetwork->numRelation[kNeuron] = interface[SIGHT].id[0];
+                    //QString text(caracterCla(interface[SIGHT].id[0]));
+                    std::cout<<interface[SIGHT].id[0]<<endl;
+                    std::cout<<"Número asociado a una cantidad conocida"<<endl;
+               }
+               else {
+                    std::cout<<"Número no aprendido completamente"<<endl;
+                }
+            }
+            else {
 
-           /* orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
-            orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=0;
-            QString cN = QString::number(kNeuron);
-            QString oN = QString::number(orderNeuron);
-            ui->textBrowser->setText(cN+" "+oN);
-            kNeuron=0;
-            orderNeuron++;*/
+                stateSenses  [SIGHT]   = recognize(&neuralSenses[SIGHT]  ,sizeNet,characteristicVectorEye,&interface[SIGHT],statistics, aux);
+                std::cout<<"Confundido, cantidad desconocida"<<endl;
+            }
 
-            stateSenses  [SIGHT]   = recognize(&neuralSenses[SIGHT]  ,sizeNet,characteristicVectorEye,&interface[SIGHT],statistics);
         } catch (string text) {
             QMessageBox::critical(this,"CUDA ERROR",QString(text.c_str()).append("\n Se cerrara Aplicación"));
             exit(EXIT_FAILURE);
@@ -174,8 +227,8 @@ void MainWindow::processGrid()
     if(!chemicalLayerEar->getNoData())
     {
         try {
-            stateSenses  [HEARING] = recognize(&neuralSenses[HEARING],sizeNet,characteristicVectorEar,&interface[HEARING],statistics);
-           // printf("%d\n", characteristicVectorEar);
+            stateSenses  [HEARING] = recognize(&neuralSenses[HEARING],sizeNet,characteristicVectorEar,&interface[HEARING],statistics, aux);
+
 
             if( stateSenses  [HEARING] == IS_HIT && !isInactivateSense[SIGHT])
                 emit cross();
@@ -190,6 +243,8 @@ void MainWindow::processGrid()
 
     else
         isInactivateSense   [HEARING] = true;
+
+    kNeuron=1;
 
 }
 
@@ -610,7 +665,7 @@ void MainWindow::learn(senses sense)
     case DIFF:
         try{
         correct(&neuralSenses[sense],sizeNet,formsTeaching[sense]->getLineEditInput()->text().toInt(),deviceProp.maxThreadsPerBlock,statistics);
-        stateSenses[sense] = recognize(&neuralSenses[sense],sizeNet,characteristicVectorEar,&interface[sense],statistics);
+        stateSenses[sense] = recognize(&neuralSenses[sense],sizeNet,characteristicVectorEar,&interface[sense],statistics, aux);
         break;
     } catch (string text) {
             QMessageBox::critical(this,"CUDA ERROR",QString(text.c_str()).append("\n Se cerrara Aplicación"));
@@ -762,8 +817,7 @@ void MainWindow::initializeTable()
 
 /*===============================INICIALIZANDO NEURONAS DE CONTEO Y ORDEN*========================================*/
 
-int kNeuron =1;
-int orderNeuron =1;
+
 int kAux = 0;
 
 /*===================================================================================================================*/
@@ -802,6 +856,7 @@ void MainWindow::intitializeSenses(int numSenses)
     orderNetwork->bumPointer = new unsigned char [sizeNet.numNeuron * 9];
     orderNetwork->category = new unsigned char [sizeNet.numNeuron * 32];
     orderNetwork->order = new unsigned char [sizeNet.numNeuron * 32];
+    orderNetwork->numRelation = new unsigned char (1);
 
     for(register int i=0; i<sizeNet.numNeuron; i++) {
         orderNetwork->countNet[i].vectorNetworkCount = new unsigned char [sizeNet.numNeuron * 32];
@@ -1085,8 +1140,13 @@ void MainWindow::freeGenericPtr(T *ptr)
 }
 
 bool MainWindow::analyticsNeuron(){
-    if( interface[HEARING].hits == 0  || interface[SIGHT].hits == 0)      //  si hay hits en Oido y  Vista estan activa
+    if( interface[HEARING].hits == 0  || interface[SIGHT].hits == 0)  {
+        if(interface[HEARING].hits == 0)
+            paintBinaryCharacteristic(SIGHT, interface[SIGHT].id[0]);
+        else
+            paintBinaryCharacteristic(HEARING,interface[HEARING].id[0] );
         return false;
+        }//  si hay hits en Oido y  Vista estan activa
 
     unsigned char sightCategory;
     unsigned char tempEarC;
@@ -1105,6 +1165,27 @@ bool MainWindow::ambiguity(unsigned char sightCat){
     for(int i=0; i<*interface[SIGHT].hits; i++){                          //  Si hay distintas categorias en el
         if(interface[SIGHT].arrayCategory[i] =! sightCat)            //  vector de categorias de la vista entonces
             return true;
+    }
+}
+
+void MainWindow::initializeCuturalNet(int numNeuron){                   //ESFERA CULTURAL
+    addNet = new CulturalNet;
+    addNet->data = new unsigned char [numNeuron];
+    addNet->flipflopKnow =new unsigned char [numNeuron];
+    addNet->valve = new unsigned char [numNeuron];
+}
+
+void MainWindow::think(senses senses){
+    //paintBinaryCharacteristic(senses, );
+}
+
+void MainWindow::freeCulturalNet(){
+    if(addNet != NULL){
+        freeGenericPtr(addNet->data);
+        freeGenericPtr(addNet->flipflopKnow);
+        freeGenericPtr(addNet->valve);
+        delete addNet;
+
     }
 }
 
@@ -1190,15 +1271,6 @@ void MainWindow::actualiceCategory(unsigned char earCat, unsigned char sightid){
 
 /*==================================TESIS RICARDO GRATEROL====================================*/
 
-void MainWindow::on_pushButtonBip_clicked() {
-    if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
-        std::cout<<"Entiendo esta cantidad"<<endl;
-    }
-    else {
-        std::cout<<"Confundido"<<endl;
-    }
-    kNeuron++;
-}
 
 void MainWindow::printCountNetwork() {
     for(register int i=0; i<kNeuron ; i++) {
@@ -1249,6 +1321,8 @@ void MainWindow::countProtocol()
     }
     //activateInterface(false);*/
     if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
+        QString cN = QString::number(kNeuron);
+        ui->textBrowser->setText("Numero Asimilado \nNeurona K: "+ cN);
         std::cout<<"Cantidad conocida"<<endl;
     }
     else {
@@ -1257,25 +1331,12 @@ void MainWindow::countProtocol()
         std::cout<<"Cantidad Desconocida"<<endl;
     }
     QString cN = QString::number(kNeuron);
-    QString oN = QString::number(orderNeuron);
-    /*if(orderNetwork->countNet[kNeuron].vectorNetworkCount[kNeuron] == 1 ) {
-        ui->textBrowser->setText("Numero ya conocido\nNeurona K: "+ cN+"\nNeurona O: "+oN);
-    }
-    else {
-        ui->textBrowser->setText("Numero desconocido\nNeurona K: "+ cN+"\nNeurona O: "+oN);
-    }*/
+    ui->textBrowser->setText("Neurona K: "+ cN+"\n");
     kNeuron++;
 }
 
 void MainWindow::orderProtocol() {
     ui->pushButton_teachClack->setEnabled(false);
-    /*orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
-    orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=0;*/
-
-   // orderNetwork->countNet[kNeuron].vectorNetworkCount[kNeuron] = 1;
-   // orderNetwork->countNet[kNeuron].vectorPointerCount[kNeuron]= countNetwork->vectorPointerCount[kNeuron]-1;
-
-    //orderNeuron++;
     countNetwork->clackPointer[kNeuron] = kNeuron;
     orderNetwork->order[kNeuron] = 1;
     orderNetwork->bumPointer[kNeuron] = 1;
@@ -1285,7 +1346,15 @@ void MainWindow::orderProtocol() {
     QString cN = QString::number(kNeuron);
     QString oN = QString::number(kAux);
     ui->textBrowser->setText("Numero Asimilado \nNeurona K: "+ cN+"\nNeurona O: "+oN);
+    /*orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
+    orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=0;*/
+
+   // orderNetwork->countNet[kNeuron].vectorNetworkCount[kNeuron] = 1;
+   // orderNetwork->countNet[kNeuron].vectorPointerCount[kNeuron]= countNetwork->vectorPointerCount[kNeuron]-1;
+
+    //orderNeuron++;
 }
+
 
 /*QString getStringFromUnsignedChar(unsigned char *str)
 {
