@@ -177,7 +177,15 @@ unsigned char * aux;
 
 }*/
 
+void MainWindow::on_checkBox_cuento_clicked() {
+    if (ui->checkBox_cuento->isChecked())
+        ui->pushButtonBip->setEnabled(false);
+    else
+        ui->pushButtonBip->setEnabled(true);
+}
+
 void MainWindow::on_pushButtonBip_clicked() {
+
     if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
         std::cout<<"Entiendo esta cantidad"<<endl;
     }
@@ -195,24 +203,42 @@ void MainWindow::processGrid()
     if(!chemicalLayerEye->getNoData())
     {
         try {
-            if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
-                stateSenses  [SIGHT]   = recognize(&neuralSenses[SIGHT]  ,sizeNet,characteristicVectorEye,&interface[SIGHT],statistics, aux);
+            stateSenses  [SIGHT]   = recognize(&neuralSenses[SIGHT]  ,sizeNet,characteristicVectorEye,&interface[SIGHT],statistics, aux);
+            if (ui->checkBox_cuento->isChecked()) {
                 if( stateSenses[SIGHT] == IS_HIT ){
-                    orderNetwork->numRelation[kNeuron] = interface[SIGHT].id[0];
-                    //QString text(caracterCla(interface[SIGHT].id[0]));
-                    std::cout<<interface[SIGHT].id[0]<<endl;
-                    std::cout<<"Número asociado a una cantidad conocida"<<endl;
-               }
-               else {
-                    std::cout<<"Número no aprendido completamente"<<endl;
+                    std::cout<<"DWADAW"<<endl;
+                    int k=0;
+                    for(k=0; k<=kNeuron; k++) {
+                        if (orderNetwork->numRelation[k] == interface[SIGHT].id[0]) {
+                            std::cout<<"Comienzo a contar"<<endl;
+                            break;
+                        }
+                    }
+                    if(k == kNeuron) {
+                        std::cout<<"NO CONSEGUI NUMERO NEURONAL"<<endl;
+                    }
+                 }
+                 else {
+                    std::cout<<"No conozco ese numero, deberia de aprenderlo primero y asociarlo a una cantidad"<<endl;
                 }
             }
             else {
+                if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
+                    if( stateSenses[SIGHT] == IS_HIT ){
+                        orderNetwork->numRelation[kNeuron] = interface[SIGHT].id[0];
+                        //QString text(caracterCla(interface[SIGHT].id[0]));
+                        std::cout<<interface[SIGHT].id[0]<<endl;
+                        std::cout<<"Número asociado a una cantidad conocida"<<endl;
+                   }
+                   else {
+                        std::cout<<"Número no aprendido completamente"<<endl;
+                    }
+                }
+                else {
 
-                stateSenses  [SIGHT]   = recognize(&neuralSenses[SIGHT]  ,sizeNet,characteristicVectorEye,&interface[SIGHT],statistics, aux);
-                std::cout<<"Confundido, cantidad desconocida"<<endl;
-            }
-
+                    std::cout<<"Confundido, cantidad desconocida"<<endl;
+                }
+          }
         } catch (string text) {
             QMessageBox::critical(this,"CUDA ERROR",QString(text.c_str()).append("\n Se cerrara Aplicación"));
             exit(EXIT_FAILURE);

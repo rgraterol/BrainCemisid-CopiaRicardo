@@ -82,6 +82,7 @@ public slots :
 
 private slots:
     void on_pushButtonBip_clicked();
+    void on_checkBox_cuento_clicked();
 
 private:
     Ui::MainWindow *     ui;

@@ -257,6 +257,13 @@
          </spacer>
         </item>
         <item>
+         <widget class="QCheckBox" name="checkBox_cuento">
+          <property name="text">
+           <string>Cuento ese Número?</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="pushButtonBip">
           <property name="statusTip">
            <string>Añade Bips del protocolos Bum Bip Clack</string>
