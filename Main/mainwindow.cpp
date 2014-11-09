@@ -18,6 +18,9 @@ void reset(NeuralNetwork * neuralSenses , const SizeNet & sizeNet,int maxThreads
 extern "C"
 void newItemCulturalNet(CulturalNet * addNet, int protocol, int LPA, int LPT );
 
+extern "C"
+void findOrderNeuron(OrderNetwork * orderNet,const SizeNet & sizeNet,  unsigned char sightID, int numOrder);
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -206,7 +209,6 @@ void MainWindow::processGrid()
             stateSenses  [SIGHT]   = recognize(&neuralSenses[SIGHT]  ,sizeNet,characteristicVectorEye,&interface[SIGHT],statistics, aux);
             if (ui->checkBox_cuento->isChecked()) {
                 if( stateSenses[SIGHT] == IS_HIT ){
-                    std::cout<<"DWADAW"<<endl;
                     int k=0;
                     for(k=0; k<=kNeuron; k++) {
                         if (orderNetwork->numRelation[k] == interface[SIGHT].id[0]) {

@@ -26,12 +26,6 @@ struct OrderNetwork {
     unsigned char * numRelation;
 };
 
-/*struct SizeCountNet{
-    unsigned int numNeuronCount;
-    unsigned int sizeVectorNeuronCount;
-    unsigned int sizevectorFlagsCount;
-    unsigned int sizeBinaryCharacteristicCount;
-};*/
-
+enum stateOrderNetwork{FOUND, NOTFOUND};
 
 #endif // COUNTNETWORK_H
