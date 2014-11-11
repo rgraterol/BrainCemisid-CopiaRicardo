@@ -33,7 +33,7 @@ __global__ void safeRelation(unsigned char *d_vectorFlags, int *d_countHit,
                              unsigned char *d_wishCategory);
 __global__ void newItemCulturalNet(unsigned char * d_data, bool d_valve, bool trueKNW);
 
-__global__ void  findOrderNeuron(unsigned char * d_orderNeuron, unsigned char sightID, int * min_idx);
+__global__ void  findOrderNeuron(unsigned char * d_orderNeuron, unsigned char * sightID, int * min_idx);
 
 
 // methods prototype
@@ -302,13 +302,14 @@ void safeRelation(NeuralNetwork *  neuralSenses, const SizeNet & sizeNet, Relati
 }
 
 extern "C"
-void findOrderNeuron(OrderNetwork * orderNet,const SizeNet & sizeNet,  unsigned char sightID, int numOrder) {
+int findOrderNeuron(OrderNetwork * orderNet,const SizeNet & sizeNet,  unsigned char sightID) {
 
     stateOrderNetwork *d_stateOrder;
 
     unsigned char * d_relationNeuron;
-    unsigned char d_sightID;
+    unsigned char * d_sightID;
     int *d_minidx;
+    int numOrder;
 
     dim3 blockSize (SIZE_CHARACTERISTIC);
     dim3 gridSize  ( (*orderNet->numRelation) +1 );
@@ -316,29 +317,29 @@ void findOrderNeuron(OrderNetwork * orderNet,const SizeNet & sizeNet,  unsigned 
 
     //ALLOCATE MEMORY
     checkCudaErrors(cudaMalloc( &d_relationNeuron , sizeof(unsigned char) * (*(orderNet->numRelation)) ) );
-    checkCudaErrors(cudaMalloc( &d_sightID , sizeof(unsigned char) ) );
+    checkCudaErrors(cudaMalloc( &d_sightID , sizeof(unsigned char) * (*(orderNet->numRelation))  ) );
     checkCudaErrors(cudaMalloc( &d_minidx , sizeof(int) ) );
 
     //HOST TO DEVICE
     checkCudaErrors( cudaMemcpy( d_relationNeuron, orderNet->numRelation , sizeof(unsigned char), cudaMemcpyHostToDevice ) );
-    checkCudaErrors( cudaMemcpy( d_sightID, sightID , sizeof(unsigned char), cudaMemcpyHostToDevice ) );
-    checkCudaErrors( cudaMemcpy( d_minidx, sightID , sizeof(int), cudaMemcpyHostToDevice ) );
+    checkCudaErrors( cudaMemcpy( d_sightID, &sightID , sizeof(unsigned char), cudaMemcpyHostToDevice ) );
 
     timer.Start();
-    findOrderNeuron(d_relationNeuron, d_sightID, d_minidx);
+    findOrderNeuron<<<gridSize,blockSize>>>(d_relationNeuron, d_sightID, d_minidx);
     timer.Stop();
 
     checkCudaErrors(cudaDeviceSynchronize());
     checkCudaErrors(cudaGetLastError());
 
     //DEVICE TO HOST
-    checkCudaErrors( cudaMemcpy( numOrder , d_minidx, sizeof(int), cudaMemcpyDeviceToHost ) );
+    checkCudaErrors( cudaMemcpy( &numOrder , d_minidx, sizeof(int), cudaMemcpyDeviceToHost ) );
 
     checkCudaErrors(cudaFree(d_minidx));
     checkCudaErrors(cudaFree(d_relationNeuron));
 
     checkCudaErrors(cudaFree(d_sightID));
 
+    return numOrder;
 }
 
 
@@ -548,9 +549,10 @@ __global__ void newItemCulturalNet(unsigned char * d_data, bool *d_valve, bool t
     }
 }
 
-__global__ void findOrderNeuron(unsigned char *d_relationNeuron, unsigned char sightID, int *min_idx) {
+__global__ void findOrderNeuron(unsigned char *d_relationNeuron, unsigned char * sightID, int *min_idx)
+{
     int idx = threadIdx.x + blockDim.x*blockIdx.x;
-    if(d_relationNeuron[idx] == sightID)
+    if(d_relationNeuron[idx] == sightID[0])
         atomicMin(min_idx, idx);
 }
 

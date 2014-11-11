@@ -19,7 +19,7 @@ extern "C"
 void newItemCulturalNet(CulturalNet * addNet, int protocol, int LPA, int LPT );
 
 extern "C"
-void findOrderNeuron(OrderNetwork * orderNet,const SizeNet & sizeNet,  unsigned char sightID, int numOrder);
+int findOrderNeuron(OrderNetwork * orderNet,const SizeNet & sizeNet,  unsigned char sightID);
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -210,7 +210,9 @@ void MainWindow::processGrid()
             if (ui->checkBox_cuento->isChecked()) {
                 if( stateSenses[SIGHT] == IS_HIT ){
                     int k=0;
-                    for(k=0; k<=kNeuron; k++) {
+                    k = findOrderNeuron(orderNetwork, sizeNet, interface[SIGHT].id[0]);
+                    std::cout<<k<<endl;
+                    /*for(k=0; k<=kNeuron; k++) {
                         if (orderNetwork->numRelation[k] == interface[SIGHT].id[0]) {
                             std::cout<<"Comienzo a contar"<<endl;
                             break;
@@ -218,7 +220,7 @@ void MainWindow::processGrid()
                     }
                     if(k == kNeuron) {
                         std::cout<<"NO CONSEGUI NUMERO NEURONAL"<<endl;
-                    }
+                    }*/
                  }
                  else {
                     std::cout<<"No conozco ese numero, deberia de aprenderlo primero y asociarlo a una cantidad"<<endl;
