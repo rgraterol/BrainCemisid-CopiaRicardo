@@ -1352,16 +1352,16 @@ void MainWindow::countProtocol()
     //activateInterface(false);*/
     if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
         QString cN = QString::number(kNeuron);
-        ui->textBrowser->setText("Numero Asimilado \nNeurona K: "+ cN);
+        ui->textBrowser->setText("KNOWN BIP");
         std::cout<<"Cantidad conocida"<<endl;
     }
     else {
         countNetwork->vectorNetworkCount[kNeuron]= 1;
         countNetwork->bipPointer[kNeuron]=kNeuron+1;
+        ui->textBrowser->setText("UNKNOWN BIP");
         std::cout<<"Cantidad Desconocida"<<endl;
     }
     QString cN = QString::number(kNeuron);
-    ui->textBrowser->setText("Neurona K: "+ cN+"\n");
     kNeuron++;
 }
 
@@ -1375,7 +1375,7 @@ void MainWindow::orderProtocol() {
     orderNeuron=1;
     QString cN = QString::number(kNeuron);
     QString oN = QString::number(kAux);
-    ui->textBrowser->setText("Numero Asimilado \nNeurona K: "+ cN+"\nNeurona O: "+oN);
+    ui->textBrowser->setText("CLACK");
     /*orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
     orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=0;*/
 
@@ -1384,25 +1384,3 @@ void MainWindow::orderProtocol() {
 
     //orderNeuron++;
 }
-
-
-/*QString getStringFromUnsignedChar(unsigned char *str)
-{
-
-    QString s;
-    QString result = "";
-    int rev = strlen(str);
-
-    // Print String in Reverse order....
-    for ( int i = 0; i<rev; i++)
-        {
-           s = QString("%1").arg(str[i],0,16);
-
-           if(s == "0"){
-              s="00";
-             }
-         result.append(s);
-
-         }
-   return result;
-}*/
