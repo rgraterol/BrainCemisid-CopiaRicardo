@@ -150,36 +150,6 @@ int kNeuron =1;
 int orderNeuron =1;
 unsigned char * aux;
 
-/*void MainWindow::on_pushButton_prueba_clicked() {
-    int id, category,centinel;
-    unsigned char * vector=   interface[SIGHT].arrayCategory ;
-    centinel= (true) ?*(interface[SIGHT].hits) : *(neuralSenses[SIGHT].ptr);
-    for(int j=0; j <= 12;j++){
-        std::cout<<"subgraph cluster_"<<j<<"{ ";
-
-        for (int i = 0; i < centinel ; i++) {
-
-            id=(true) ? interface[SIGHT].id[i] : i;
-            category=vector[i];
-
-            if(category != j){
-
-                if(j==11 && category==43)
-                    std::cout<<"\"item"<<id<<"\" [label=  \"id neurona = "<<id<<"\\nCategoria = '+'\"];\n";
-                if(j==12 && category==61)
-                    std::cout<<"\"item"<<id<<"\" [label=  \"id neurona = "<<id<<"\\nCategoria = '='\"];\n";
-            }
-
-            else
-                std::cout<<"\"item"<<id<<"\" [label=  \"id neurona = "<<id<<"\\nCategoria= "<<category<<"\"];\n";
-
-        }
-
-        std::cout<<"}\n";
-    }
-
-}*/
-
 void MainWindow::on_checkBox_cuento_clicked() {
     if (ui->checkBox_cuento->isChecked())
         ui->pushButtonBip->setEnabled(false);
@@ -190,11 +160,17 @@ void MainWindow::on_checkBox_cuento_clicked() {
 void MainWindow::on_pushButtonBip_clicked() {
 
     if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
-        std::cout<<"Entiendo esta cantidad"<<endl;
+        QString cN = QString::number(kNeuron);
+        ui->textBrowser->setText("KNOWN BIP");
+        std::cout<<"Cantidad conocida"<<endl;
     }
     else {
-        std::cout<<"Confundido"<<endl;
+        countNetwork->vectorNetworkCount[kNeuron]= 1;
+        countNetwork->bipPointer[kNeuron]=kNeuron+1;
+        ui->textBrowser->setText("UNKNOWN BIP");
+        std::cout<<"Cantidad Desconocida"<<endl;
     }
+    QString cN = QString::number(kNeuron);
     kNeuron++;
 }
 
@@ -207,42 +183,36 @@ void MainWindow::processGrid()
     {
         try {
             stateSenses  [SIGHT]   = recognize(&neuralSenses[SIGHT]  ,sizeNet,characteristicVectorEye,&interface[SIGHT],statistics, aux);
-            if (ui->checkBox_cuento->isChecked()) {
+            if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
                 if( stateSenses[SIGHT] == IS_HIT ){
-                    int k=0;
-                    k = findOrderNeuron(orderNetwork, sizeNet, interface[SIGHT].id[0]);
-                    std::cout<<k<<endl;
-                    /*for(k=0; k<=kNeuron; k++) {
-                        if (orderNetwork->numRelation[k] == interface[SIGHT].id[0]) {
-                            std::cout<<"Comienzo a contar"<<endl;
-                            break;
-                        }
-                    }
-                    if(k == kNeuron) {
-                        std::cout<<"NO CONSEGUI NUMERO NEURONAL"<<endl;
-                    }*/
-                 }
-                 else {
-                    std::cout<<"No conozco ese numero, deberia de aprenderlo primero y asociarlo a una cantidad"<<endl;
+                    //orderNetwork->numRelation[kNeuron] = interface[SIGHT].id[0];
+                    //QString text(caracterCla(interface[SIGHT].id[0]));
+                    //std::cout<<interface[SIGHT].id[0]<<endl;
+                    std::cout<<"Número asociado a una cantidad conocida"<<endl;
+               }
+                else {
+                    //std::cout<<"Número no aprendido completamente"<<endl;
+                    countNetwork->clackPointer[kNeuron] = kNeuron;
+                    orderNetwork->order[kNeuron] = 1;
+                    orderNetwork->bumPointer[kNeuron] = 1;
+                    //kAux = kNeuron;
+                    kNeuron=1;
+                    orderNeuron=1;
+                    std::cout<<"CLACK"<<endl;
                 }
             }
             else {
-                if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
-                    if( stateSenses[SIGHT] == IS_HIT ){
-                        orderNetwork->numRelation[kNeuron] = interface[SIGHT].id[0];
-                        //QString text(caracterCla(interface[SIGHT].id[0]));
-                        std::cout<<interface[SIGHT].id[0]<<endl;
-                        std::cout<<"Número asociado a una cantidad conocida"<<endl;
-                   }
-                   else {
-                        std::cout<<"Número no aprendido completamente"<<endl;
-                    }
-                }
-                else {
-
-                    std::cout<<"Confundido, cantidad desconocida"<<endl;
-                }
-          }
+                countNetwork->vectorNetworkCount[kNeuron]= 1;
+                countNetwork->bipPointer[kNeuron]=kNeuron+1;
+                countNetwork->clackPointer[kNeuron] = kNeuron;
+                orderNetwork->order[kNeuron] = 1;
+                orderNetwork->bumPointer[kNeuron] = 1;
+                //kAux = kNeuron;
+                kNeuron=1;
+                orderNeuron=1;
+                std::cout<<"CLACK2"<<endl;
+                //std::cout<<"Confundido, cantidad desconocida"<<endl;
+            }
         } catch (string text) {
             QMessageBox::critical(this,"CUDA ERROR",QString(text.c_str()).append("\n Se cerrara Aplicación"));
             exit(EXIT_FAILURE);
@@ -258,6 +228,62 @@ void MainWindow::processGrid()
     {
         try {
             stateSenses  [HEARING] = recognize(&neuralSenses[HEARING],sizeNet,characteristicVectorEar,&interface[HEARING],statistics, aux);
+            if (ui->checkBox_cuento->isChecked()) {
+                if( stateSenses[HEARING] == IS_HIT ){
+                    int k = 1;
+                    kNeuron = sizeof(orderNetwork->numRelation);
+                    //std::cout<<"INTERFACE ID";
+                    //std::cout<<interface[HEARING].id[0]<<endl;
+                    //k = findOrderNeuron(orderNetwork, sizeNet, interface[SIGHT].id[0]);
+                    for(k=1; k<=kNeuron; k++) {
+                        std::cout<<orderNetwork->numRelation[k]<<endl;
+                        if (orderNetwork->numRelation[k] == interface[HEARING].id[0]) {
+                            std::cout<<"Comienzo a contar"<<endl;
+                            break;
+                        }
+                    }
+                    if(k == kNeuron+1) {
+                        std::cout<<"NO CONSEGUI NUMERO NEURONAL"<<endl;
+                    }
+                    std::cout<<k<<endl;
+                    std::cout<<kNeuron<<endl;
+                 }
+                else {
+                    std::cout<<"No conozco ese numero, deberia de aprenderlo primero y asociarlo a una cantidad"<<endl;
+                }
+            }
+            else {
+                if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
+                    if( stateSenses[HEARING] == IS_HIT ){
+                        orderNetwork->numRelation[kNeuron] = interface[HEARING].id[0];
+                        //QString text(caracterCla(interface[SIGHT].id[0]));
+                        std::cout<<interface[HEARING].id[0]<<endl;
+                        std::cout<<"Número asociado a una cantidad conocida"<<endl;
+                   }
+                    else {
+                        //std::cout<<"Número no aprendido completamente"<<endl;
+                        countNetwork->clackPointer[kNeuron] = kNeuron;
+                        orderNetwork->order[kNeuron] = 1;
+                        orderNetwork->bumPointer[kNeuron] = 1;
+                        //kAux = kNeuron;
+                        kNeuron=1;
+                        orderNeuron=1;
+                        std::cout<<"CLACK AUDIO"<<endl;
+                    }
+                }
+                else {
+                    //countNetwork->vectorNetworkCount[kNeuron]= 1;
+                    //countNetwork->bipPointer[kNeuron]=kNeuron+1;
+                    //countNetwork->clackPointer[kNeuron] = kNeuron;
+                    orderNetwork->order[kNeuron] = 1;
+                    orderNetwork->bumPointer[kNeuron] = 1;
+                    //kAux = kNeuron;
+                    kNeuron=1;
+                    orderNeuron=1;
+                    std::cout<<"CLACK2 AUDIO"<<endl;
+                    //std::cout<<"Confundido, cantidad desconocida"<<endl;
+                }
+          }
 
 
             if( stateSenses  [HEARING] == IS_HIT && !isInactivateSense[SIGHT])
