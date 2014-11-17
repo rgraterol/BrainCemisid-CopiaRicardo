@@ -185,9 +185,6 @@ void MainWindow::processGrid()
             stateSenses  [SIGHT]   = recognize(&neuralSenses[SIGHT]  ,sizeNet,characteristicVectorEye,&interface[SIGHT],statistics, aux);
             if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
                 if( stateSenses[SIGHT] == IS_HIT ){
-                    //orderNetwork->numRelation[kNeuron] = interface[SIGHT].id[0];
-                    //QString text(caracterCla(interface[SIGHT].id[0]));
-                    //std::cout<<interface[SIGHT].id[0]<<endl;
                     std::cout<<"Número asociado a una cantidad conocida"<<endl;
                }
                 else {
@@ -197,7 +194,9 @@ void MainWindow::processGrid()
                     orderNetwork->bumPointer[kNeuron] = 1;
                     //kAux = kNeuron;
                     kNeuron=1;
-                    orderNeuron=1;
+                    if(kNeuron>orderNeuron) {
+                     orderNeuron=kNeuron;
+                    }
                     std::cout<<"CLACK"<<endl;
                 }
             }
@@ -209,7 +208,9 @@ void MainWindow::processGrid()
                 orderNetwork->bumPointer[kNeuron] = 1;
                 //kAux = kNeuron;
                 kNeuron=1;
-                orderNeuron=1;
+                if(kNeuron>orderNeuron) {
+                 orderNeuron=kNeuron;
+                }
                 std::cout<<"CLACK2"<<endl;
                 //std::cout<<"Confundido, cantidad desconocida"<<endl;
             }
@@ -231,22 +232,24 @@ void MainWindow::processGrid()
             if (ui->checkBox_cuento->isChecked()) {
                 if( stateSenses[HEARING] == IS_HIT ){
                     int k = 1;
-                    kNeuron = sizeof(orderNetwork->numRelation);
                     //std::cout<<"INTERFACE ID";
                     //std::cout<<interface[HEARING].id[0]<<endl;
                     //k = findOrderNeuron(orderNetwork, sizeNet, interface[SIGHT].id[0]);
-                    for(k=1; k<=kNeuron; k++) {
-                        std::cout<<orderNetwork->numRelation[k]<<endl;
+                    std::cout<<orderNeuron<<endl;
+                    for(k=1; k<orderNeuron; k++) {
                         if (orderNetwork->numRelation[k] == interface[HEARING].id[0]) {
                             std::cout<<"Comienzo a contar"<<endl;
                             break;
                         }
                     }
-                    if(k == kNeuron+1) {
+                    if(k == orderNeuron) {
                         std::cout<<"NO CONSEGUI NUMERO NEURONAL"<<endl;
                     }
-                    std::cout<<k<<endl;
-                    std::cout<<kNeuron<<endl;
+                    else {
+                        paintCount(HEARING, interface[HEARING].id[0], k-1);
+
+                    }
+
                  }
                 else {
                     std::cout<<"No conozco ese numero, deberia de aprenderlo primero y asociarlo a una cantidad"<<endl;
@@ -259,6 +262,9 @@ void MainWindow::processGrid()
                         //QString text(caracterCla(interface[SIGHT].id[0]));
                         std::cout<<interface[HEARING].id[0]<<endl;
                         std::cout<<"Número asociado a una cantidad conocida"<<endl;
+                        if(kNeuron>orderNeuron) {
+                         orderNeuron=kNeuron;
+                        }
                    }
                     else {
                         //std::cout<<"Número no aprendido completamente"<<endl;
@@ -267,7 +273,9 @@ void MainWindow::processGrid()
                         orderNetwork->bumPointer[kNeuron] = 1;
                         //kAux = kNeuron;
                         kNeuron=1;
-                        orderNeuron=1;
+                        if(kNeuron>orderNeuron) {
+                         orderNeuron=kNeuron;
+                        }
                         std::cout<<"CLACK AUDIO"<<endl;
                     }
                 }
@@ -279,7 +287,9 @@ void MainWindow::processGrid()
                     orderNetwork->bumPointer[kNeuron] = 1;
                     //kAux = kNeuron;
                     kNeuron=1;
-                    orderNeuron=1;
+                    if(kNeuron>orderNeuron) {
+                     orderNeuron=kNeuron;
+                    }
                     std::cout<<"CLACK2 AUDIO"<<endl;
                     //std::cout<<"Confundido, cantidad desconocida"<<endl;
                 }
@@ -303,6 +313,7 @@ void MainWindow::processGrid()
     kNeuron=1;
 
 }
+
 
 void MainWindow::clearTables()
 {
@@ -342,7 +353,7 @@ void MainWindow::resetSight()
 
 void MainWindow::activateButtonBip()
 {
-    if(!(chemicalLayerEar->getNoData()) || !(chemicalLayerEye->getNoData())) {
+    if((!(chemicalLayerEar->getNoData()) || !(chemicalLayerEye->getNoData())) && !ui->checkBox_cuento->isChecked()) {
         ui->pushButtonBip->setEnabled(true);
     }
 
@@ -396,6 +407,7 @@ void MainWindow::paintNetNeuron(senses sense, bool onlyHits)
     view.showNet();
 }
 
+
 void MainWindow::paintBinaryCharacteristic(senses sense, int ptr)
 {
     unsigned short  displacement = 8 * sizeof (unsigned short) -1;
@@ -406,6 +418,7 @@ void MainWindow::paintBinaryCharacteristic(senses sense, int ptr)
     image->fill(Qt::color1);
 
     QPainter paint;
+
     paint.begin(image);
 
     QPen pen(QColor(Qt::color1));
@@ -876,7 +889,6 @@ void MainWindow::initializeTable()
 
 int kAux = 0;
 
-/*===================================================================================================================*/
 
 void MainWindow::intitializeSenses(int numSenses)
 {
@@ -1231,8 +1243,8 @@ void MainWindow::initializeCuturalNet(int numNeuron){                   //ESFERA
     addNet->valve = new unsigned char [numNeuron];
 }
 
-void MainWindow::think(senses senses){
-    //paintBinaryCharacteristic(senses, );
+void MainWindow::think(senses sense){
+
 }
 
 void MainWindow::freeCulturalNet(){
@@ -1409,4 +1421,142 @@ void MainWindow::orderProtocol() {
    // orderNetwork->countNet[kNeuron].vectorPointerCount[kNeuron]= countNetwork->vectorPointerCount[kNeuron]-1;
 
     //orderNeuron++;
+}
+
+void MainWindow::paintCount(senses sense, int ptr, int times) {
+   int img_width = 204;
+   if (times == 1) {
+           QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+           QImage result(image1.width(), image1.height() ,QImage::Format_RGB32);
+           QPainter painter(this);
+           painter.begin(&result);
+           painter.drawImage(0,0,image1);
+           painter.end();
+           ViewFinder &view = ViewFinder::getInstance(this);
+           view.think(result);
+   }
+   if (times == 2) {
+       QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+       QImage image2("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+       QImage result(image1.width() + image2.width(), image1.height() ,QImage::Format_RGB32);
+
+       QPainter painter(this);
+       painter.begin(&result);
+       painter.drawImage(0,0,image1);
+       painter.drawImage(img_width,0,image2);
+       painter.end();
+       ViewFinder &view = ViewFinder::getInstance(this);
+       view.think(result);
+
+    }
+   if (times == 3) {
+       QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+       QImage result(image1.width()*3, image1.height() ,QImage::Format_RGB32);
+       QPainter painter(this);
+       painter.begin(&result);
+       painter.drawImage(0,0,image1);
+       painter.drawImage(img_width,0,image1);
+       painter.drawImage(img_width*2,0,image1);
+       painter.end();
+       ViewFinder &view = ViewFinder::getInstance(this);
+       view.think(result);
+
+    }
+   if (times == 4) {
+       QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+       QImage result(image1.width()*4, image1.height() ,QImage::Format_RGB32);
+       QPainter painter(this);
+       painter.begin(&result);
+       painter.drawImage(0,0,image1);
+       painter.drawImage(img_width,0,image1);
+       painter.drawImage(img_width*2,0,image1);
+       painter.drawImage(img_width*3,0,image1);
+       painter.end();
+       ViewFinder &view = ViewFinder::getInstance(this);
+       view.think(result);
+
+    }
+   if (times == 5) {
+       QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+       QImage result(image1.width()*5, image1.height() ,QImage::Format_RGB32);
+       QPainter painter(this);
+       painter.begin(&result);
+       painter.drawImage(0,0,image1);
+       painter.drawImage(img_width,0,image1);
+       painter.drawImage(img_width*2,0,image1);
+       painter.drawImage(img_width*3,0,image1);
+       painter.drawImage(img_width*4,0,image1);
+       painter.end();
+       ViewFinder &view = ViewFinder::getInstance(this);
+       view.think(result);
+
+    }
+   if (times == 6) {
+       QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+       QImage result(image1.width()*5, image1.height()*2 ,QImage::Format_RGB32);
+       QPainter painter(this);
+       painter.begin(&result);
+       painter.drawImage(0,0,image1);
+       painter.drawImage(img_width,0,image1);
+       painter.drawImage(img_width*2,0,image1);
+       painter.drawImage(img_width*3,0,image1);
+       painter.drawImage(img_width*4,0,image1);
+       painter.drawImage(0,img_width,image1);
+       painter.end();
+       ViewFinder &view = ViewFinder::getInstance(this);
+       view.think(result);
+    }
+   if (times == 7) {
+       QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+       QImage result(image1.width()*5, image1.height()*3 ,QImage::Format_RGB32);
+       QPainter painter(this);
+       painter.begin(&result);
+       painter.drawImage(0,0,image1);
+       painter.drawImage(img_width,0,image1);
+       painter.drawImage(img_width*2,0,image1);
+       painter.drawImage(img_width*3,0,image1);
+       painter.drawImage(img_width*4,0,image1);
+       painter.drawImage(0,img_width,image1);
+       painter.drawImage(0,img_width*2,image1);
+       painter.end();
+       ViewFinder &view = ViewFinder::getInstance(this);
+       view.think(result);
+    }
+   if (times == 8) {
+       QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+       QImage result(image1.width()*5, image1.height()*4 ,QImage::Format_RGB32);
+       QPainter painter(this);
+       painter.begin(&result);
+       painter.drawImage(0,0,image1);
+       painter.drawImage(img_width,0,image1);
+       painter.drawImage(img_width*2,0,image1);
+       painter.drawImage(img_width*3,0,image1);
+       painter.drawImage(img_width*4,0,image1);
+       painter.drawImage(0,img_width,image1);
+       painter.drawImage(0,img_width*2,image1);
+       painter.drawImage(0,img_width*3,image1);
+       painter.end();
+       ViewFinder &view = ViewFinder::getInstance(this);
+       view.think(result);
+    }
+   if (times == 8) {
+       QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+       QImage result(image1.width()*5, image1.height()*5 ,QImage::Format_RGB32);
+       QPainter painter(this);
+       painter.begin(&result);
+       painter.drawImage(0,0,image1);
+       painter.drawImage(img_width,0,image1);
+       painter.drawImage(img_width*2,0,image1);
+       painter.drawImage(img_width*3,0,image1);
+       painter.drawImage(img_width*4,0,image1);
+       painter.drawImage(0,img_width,image1);
+       painter.drawImage(0,img_width*2,image1);
+       painter.drawImage(0,img_width*3,image1);
+       painter.drawImage(0,img_width*4,image1);
+       painter.end();
+       ViewFinder &view = ViewFinder::getInstance(this);
+       view.think(result);
+    }
+
+
 }

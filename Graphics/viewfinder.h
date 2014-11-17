@@ -25,6 +25,7 @@ public:
     static ViewFinder & getInstance(QMainWindow *main = 0);
     void showNet();
     void showBinaryCharacteristic(QImage *image);
+    void think(QImage image);
     void createCanvas();
     void freeAll();
     ~ViewFinder();

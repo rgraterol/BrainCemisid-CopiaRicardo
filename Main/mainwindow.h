@@ -176,6 +176,7 @@ private:
 
     ////Trabajo Ricardo///
     void printCountNetwork();
+    void paintCount(senses sense, int ptr, int times);
 };
 
 #endif // MAINWINDOW_H

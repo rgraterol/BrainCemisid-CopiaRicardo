@@ -29,7 +29,7 @@ ViewFinder::ViewFinder( QMainWindow * mainWindow )
 
     dialogCanvas->addToolBar(toolBar);
 
-    int width = 600, height = 540;
+    int width = 1000, height = 840;
     dialogCanvas->setMinimumSize(width,height);
     dialogCanvas->setWindowTitle("Visor Grafico");
     dialogCanvas->setWindowIcon(QIcon("icons/seeNet"));
@@ -62,6 +62,13 @@ void ViewFinder::showBinaryCharacteristic(QImage *image)
     canvas->loadNumber(image);
     QTimer::singleShot(250, dialogCanvas, SLOT(show()));
 }
+
+void ViewFinder::think(QImage image) {
+    createCanvas();
+    canvas->loadNumberCount(image);
+    QTimer::singleShot(250, dialogCanvas, SLOT(show()));
+}
+
 
 void ViewFinder::createCanvas()
 {

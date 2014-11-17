@@ -32,6 +32,14 @@ void Canvas::loadNumber(QImage *image)
     }
 }
 
+
+void Canvas::loadNumberCount(QImage image) {
+    if(!image.isNull()){
+        zoomReset();
+        item->setPixmap(QPixmap::fromImage(image));
+    }
+}
+
 void Canvas::zoomIn()
 {
     scale(1.1,1.1);

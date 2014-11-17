@@ -20,6 +20,7 @@ public:
 public slots:
     void loadImage();
     void loadNumber(QImage * image);
+    void loadNumberCount(QImage image);
     void zoomIn();
     void zoomOut ();
     void zoomReset ();
