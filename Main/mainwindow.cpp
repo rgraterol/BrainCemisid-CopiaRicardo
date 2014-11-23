@@ -172,6 +172,9 @@ void MainWindow::on_pushButtonBip_clicked() {
     }
     QString cN = QString::number(kNeuron);
     kNeuron++;
+    if (kNeuron >= orderNeuron) {
+        orderNeuron = kNeuron;
+    }
 }
 
 void MainWindow::processGrid()
@@ -207,10 +210,10 @@ void MainWindow::processGrid()
                 orderNetwork->order[kNeuron] = 1;
                 orderNetwork->bumPointer[kNeuron] = 1;
                 //kAux = kNeuron;
-                kNeuron=1;
-                if(kNeuron>orderNeuron) {
+                if(kNeuron>=orderNeuron) {
                  orderNeuron=kNeuron;
                 }
+                kNeuron=1;
                 std::cout<<"CLACK2"<<endl;
                 //std::cout<<"Confundido, cantidad desconocida"<<endl;
             }
@@ -231,18 +234,17 @@ void MainWindow::processGrid()
             stateSenses  [HEARING] = recognize(&neuralSenses[HEARING],sizeNet,characteristicVectorEar,&interface[HEARING],statistics, aux);
             if (ui->checkBox_cuento->isChecked()) {
                 if( stateSenses[HEARING] == IS_HIT ){
-                    int k = 1;
-                    //std::cout<<"INTERFACE ID";
-                    //std::cout<<interface[HEARING].id[0]<<endl;
-                    //k = findOrderNeuron(orderNetwork, sizeNet, interface[SIGHT].id[0]);
                     std::cout<<orderNeuron<<endl;
+                    bool flag = true;
+                    int k=0;
                     for(k=1; k<orderNeuron; k++) {
                         if (orderNetwork->numRelation[k] == interface[HEARING].id[0]) {
                             std::cout<<"Comienzo a contar"<<endl;
+                            flag = false;
                             break;
                         }
                     }
-                    if(k == orderNeuron) {
+                    if(flag) {
                         std::cout<<"NO CONSEGUI NUMERO NEURONAL"<<endl;
                     }
                     else {
@@ -259,7 +261,6 @@ void MainWindow::processGrid()
                 if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
                     if( stateSenses[HEARING] == IS_HIT ){
                         orderNetwork->numRelation[kNeuron] = interface[HEARING].id[0];
-                        //QString text(caracterCla(interface[SIGHT].id[0]));
                         std::cout<<interface[HEARING].id[0]<<endl;
                         std::cout<<"Número asociado a una cantidad conocida"<<endl;
                         if(kNeuron>orderNeuron) {
@@ -272,10 +273,10 @@ void MainWindow::processGrid()
                         orderNetwork->order[kNeuron] = 1;
                         orderNetwork->bumPointer[kNeuron] = 1;
                         //kAux = kNeuron;
-                        kNeuron=1;
                         if(kNeuron>orderNeuron) {
                          orderNeuron=kNeuron;
                         }
+                        kNeuron=1;
                         std::cout<<"CLACK AUDIO"<<endl;
                     }
                 }
@@ -286,10 +287,10 @@ void MainWindow::processGrid()
                     orderNetwork->order[kNeuron] = 1;
                     orderNetwork->bumPointer[kNeuron] = 1;
                     //kAux = kNeuron;
-                    kNeuron=1;
                     if(kNeuron>orderNeuron) {
                      orderNeuron=kNeuron;
                     }
+                    kNeuron=1;
                     std::cout<<"CLACK2 AUDIO"<<endl;
                     //std::cout<<"Confundido, cantidad desconocida"<<endl;
                 }
@@ -1425,6 +1426,17 @@ void MainWindow::orderProtocol() {
 
 void MainWindow::paintCount(senses sense, int ptr, int times) {
    int img_width = 204;
+   std::cout<<times<<endl;
+   /*QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
+   QImage result(image1.width()*times, image1.height() ,QImage::Format_RGB32);
+   QPainter painter(this);
+   painter.begin(&result);
+   for(int i= 0; i<times; i++) {
+    painter.drawImage(0+img_width*times,0,image1);
+   }
+   painter.end();
+   ViewFinder &view = ViewFinder::getInstance(this);
+   view.think(result);*/
    if (times == 1) {
            QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
            QImage result(image1.width(), image1.height() ,QImage::Format_RGB32);
@@ -1517,7 +1529,7 @@ void MainWindow::paintCount(senses sense, int ptr, int times) {
        painter.drawImage(img_width*3,0,image1);
        painter.drawImage(img_width*4,0,image1);
        painter.drawImage(0,img_width,image1);
-       painter.drawImage(0,img_width*2,image1);
+       painter.drawImage(img_width,img_width,image1);
        painter.end();
        ViewFinder &view = ViewFinder::getInstance(this);
        view.think(result);
@@ -1533,13 +1545,13 @@ void MainWindow::paintCount(senses sense, int ptr, int times) {
        painter.drawImage(img_width*3,0,image1);
        painter.drawImage(img_width*4,0,image1);
        painter.drawImage(0,img_width,image1);
-       painter.drawImage(0,img_width*2,image1);
-       painter.drawImage(0,img_width*3,image1);
+       painter.drawImage(img_width,img_width,image1);
+       painter.drawImage(img_width*2,img_width,image1);
        painter.end();
        ViewFinder &view = ViewFinder::getInstance(this);
        view.think(result);
     }
-   if (times == 8) {
+   if (times == 9) {
        QImage image1("/home/zepp/Git/BrainCemisid-CopiaRicardo/icons/house.png");
        QImage result(image1.width()*5, image1.height()*5 ,QImage::Format_RGB32);
        QPainter painter(this);
@@ -1550,9 +1562,9 @@ void MainWindow::paintCount(senses sense, int ptr, int times) {
        painter.drawImage(img_width*3,0,image1);
        painter.drawImage(img_width*4,0,image1);
        painter.drawImage(0,img_width,image1);
-       painter.drawImage(0,img_width*2,image1);
-       painter.drawImage(0,img_width*3,image1);
-       painter.drawImage(0,img_width*4,image1);
+       painter.drawImage(img_width,img_width,image1);
+       painter.drawImage(img_width*2,img_width,image1);
+       painter.drawImage(img_width*3,img_width,image1);
        painter.end();
        ViewFinder &view = ViewFinder::getInstance(this);
        view.think(result);

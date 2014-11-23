@@ -24,6 +24,7 @@ struct OrderNetwork {
     unsigned char * bumPointer;
     unsigned char * category;
     unsigned char * numRelation;
+    int aux;
 };
 
 enum stateOrderNetwork{FOUND, NOTFOUND};
