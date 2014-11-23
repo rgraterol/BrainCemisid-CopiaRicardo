@@ -232,12 +232,16 @@ void MainWindow::processGrid()
     {
         try {
             stateSenses  [HEARING] = recognize(&neuralSenses[HEARING],sizeNet,characteristicVectorEar,&interface[HEARING],statistics, aux);
+            if (ui->checkBox_suma->isChecked()) {
+
+            }
             if (ui->checkBox_cuento->isChecked()) {
                 if( stateSenses[HEARING] == IS_HIT ){
-                    std::cout<<orderNeuron<<endl;
                     bool flag = true;
                     int k=0;
-                    for(k=1; k<orderNeuron; k++) {
+                    //int neurona = findOrderNeuron(orderNetwork, sizeNet, interface[SIGHT].id[0]);
+                    std::cout<<orderNeuron<<endl;
+                    for(k=1; k<=orderNeuron; k++) {
                         if (orderNetwork->numRelation[k] == interface[HEARING].id[0]) {
                             std::cout<<"Comienzo a contar"<<endl;
                             flag = false;

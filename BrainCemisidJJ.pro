@@ -22,7 +22,8 @@ SOURCES += Main/main.cpp\
     Graphics/dialogselecthardware.cpp \
     Graphics/dialogstatistics.cpp \
     Graphics/dialogtablebns.cpp \
-    Graphics/dialogconsultneuron.cpp
+    Graphics/dialogconsultneuron.cpp \
+    Class/sum_queue.cpp
 
 HEADERS  += Main/mainwindow.h \
     Graphics/chemicalLayer.h \
@@ -43,7 +44,8 @@ HEADERS  += Main/mainwindow.h \
     Graphics/dialogtablebns.h \
     Class/relationNetwork.h \
     Class/countNetwork.h \
-    Class/culturalNet.h
+    Class/culturalNet.h \
+    Class/sum_queue.h
 
 FORMS    += Forms/mainwindow.ui \
     Forms/formteaching.ui \

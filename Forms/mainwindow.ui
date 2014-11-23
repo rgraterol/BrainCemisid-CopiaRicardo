@@ -257,6 +257,13 @@
          </spacer>
         </item>
         <item>
+         <widget class="QCheckBox" name="checkBox_suma">
+          <property name="text">
+           <string>Sumar?</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QCheckBox" name="checkBox_cuento">
           <property name="text">
            <string>Cuento ese Número?</string>

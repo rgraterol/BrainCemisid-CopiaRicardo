@@ -31,6 +31,7 @@
 
 #include "Class/countNetwork.h"
 #include "Class/culturalNet.h"
+#include "Class/sum_queue.h"
 
 namespace Ui {
 class MainWindow;
@@ -104,6 +105,7 @@ private:
     /////TRABAJO RICARDO/////
     CountNetwork * countNetwork;
     OrderNetwork * orderNetwork;
+    SumQueue * sum_queue;
 
 
     cudaDeviceProp       deviceProp;
