@@ -146,12 +146,9 @@ void MainWindow::generateVectorsCharacteristic()
     characteristicVectorEar = chemicalLayerEar->generateCharacteristic();
     characteristicVectorEye = chemicalLayerEye->generateCharacteristic();
 }
-int kNeuron =1;
-int orderNeuron =1;
-unsigned char * aux;
 
 void MainWindow::on_checkBox_cuento_clicked() {
-    if (ui->checkBox_cuento->isChecked())
+    if (ui->checkBox_cuento->isChecked() || ui->checkBox_suma->isChecked())
         ui->pushButtonBip->setEnabled(false);
     else
         ui->pushButtonBip->setEnabled(true);
@@ -233,6 +230,19 @@ void MainWindow::processGrid()
         try {
             stateSenses  [HEARING] = recognize(&neuralSenses[HEARING],sizeNet,characteristicVectorEar,&interface[HEARING],statistics, aux);
             if (ui->checkBox_suma->isChecked()) {
+                if(sum_loop == 0) {
+                    if(interface[HEARING].arrayCategory[0] == '+')
+                        sum_loop = 1;
+                    else {
+                        if(sum_loop==0)
+                            sum_queue->enqueue(adding_up, interface[HEARING].id[0]);
+                        else
+                            sum_queue->enqueue(adding_down, interface[HEARING].id[0]);
+
+                    }
+                }
+                sum_queue->showQueue(adding_up);
+
 
             }
             if (ui->checkBox_cuento->isChecked()) {
@@ -263,7 +273,7 @@ void MainWindow::processGrid()
             }
             else {
                 if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
-                    if( stateSenses[HEARING] == IS_HIT ){
+                    if( stateSenses[HEARING] == IS_HIT && !ui->checkBox_suma->isChecked()){
                         orderNetwork->numRelation[kNeuron] = interface[HEARING].id[0];
                         std::cout<<interface[HEARING].id[0]<<endl;
                         std::cout<<"Número asociado a una cantidad conocida"<<endl;
@@ -358,7 +368,7 @@ void MainWindow::resetSight()
 
 void MainWindow::activateButtonBip()
 {
-    if((!(chemicalLayerEar->getNoData()) || !(chemicalLayerEye->getNoData())) && !ui->checkBox_cuento->isChecked()) {
+    if((!(chemicalLayerEar->getNoData()) || !(chemicalLayerEye->getNoData())) && (!ui->checkBox_cuento->isChecked() || !ui->checkBox_suma->isChecked())) {
         ui->pushButtonBip->setEnabled(true);
     }
 
@@ -861,6 +871,11 @@ void MainWindow::setNull()
     dialogSelectHardware = NULL;
     statistics           = NULL;
     selectedDevice       = -1;
+
+    adding_up.foward = NULL;
+    adding_up.back = NULL;
+    adding_down.foward = NULL;
+    adding_down.back = NULL;
 }
 
 void MainWindow::createTablesCharacteristic()
@@ -887,12 +902,6 @@ void MainWindow::initializeTable()
     ui->tableWidgetRowEye->setColumnCount(1);
     ui->tableWidgetRowEye->horizontalHeader()->hide();
 }
-
-
-/*===============================INICIALIZANDO NEURONAS DE CONTEO Y ORDEN*========================================*/
-
-
-int kAux = 0;
 
 
 void MainWindow::intitializeSenses(int numSenses)

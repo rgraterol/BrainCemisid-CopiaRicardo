@@ -120,6 +120,14 @@ private:
     unsigned char  * characteristicVectorEye;
     unsigned short * characteristicBinaryVector;
 
+    int kNeuron =1;
+    int orderNeuron =1;
+    unsigned char * aux;
+    int sum_loop = 0;
+    int kAux = 0;
+    struct queue adding_up;
+    struct queue adding_down;
+
     void initGui();
     void activateInterface(bool state);
     void setNull();
@@ -180,6 +188,7 @@ private:
     void printCountNetwork();
     void paintCount(senses sense, int ptr, int times);
     char caracterCla(int category);
+    void addition(struct queue &up, struct queue &down);
 };
 
 #endif // MAINWINDOW_H

@@ -4,21 +4,21 @@
 #include <iostream>
 
 
+struct node
+{
+   int num;
+   struct node *next;
+};
+
+struct queue
+{
+   node *foward;
+   node *back  ;
+};
+
 class SumQueue
 {
-    private:
-        struct node
-        {
-            int num;
-            struct node *next;
-        };
-
-        struct queue
-        {
-            node *foward;
-            node *back  ;
-        };
-     public:
+    public:
        void enqueue(struct queue &q, int value);
        int dequeue(struct queue &q);
        void showQueue( struct queue q );
