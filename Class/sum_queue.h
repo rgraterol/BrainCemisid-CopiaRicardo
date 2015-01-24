@@ -22,7 +22,7 @@ class SumQueue
        void enqueue(struct queue &q, int value);
        int dequeue(struct queue &q);
        void showQueue( struct queue q );
+       int queueLenght( struct queue q);
        void clearQueue( struct queue &q);
-
 };
 #endif // SUM_QUEUE_H

@@ -42,6 +42,21 @@ void SumQueue::showQueue( struct queue q )
      }
 }
 
+int SumQueue::queueLenght(struct queue q)
+{
+    struct node *aux;
+    int l = 0;
+
+    aux = q.foward;
+
+    while(aux != NULL)
+    {
+        aux = aux->next;
+        l++;
+    }
+    return l;
+}
+
 void SumQueue::clearQueue( struct queue &q)
 {
      struct node *aux;

@@ -154,6 +154,34 @@ void MainWindow::on_checkBox_cuento_clicked() {
         ui->pushButtonBip->setEnabled(true);
 }
 
+void MainWindow::addition(struct queue &up, struct queue &down) {
+    int i = 0;
+    int l_up = sum_queue->queueLenght(up);
+    int l_down = sum_queue->queueLenght(up);
+    int aux = 0;
+    int t_up = 0;
+    int t_down = 0;
+
+    if(l_up <= l_down)
+        aux = l_up;
+    else
+        aux = l_down;
+    while(i < aux) {
+        t_up = sum_queue->dequeue(up)<< endl;
+        t_down = sum_queue->dequeue(down)<< endl;
+        for(k=1; k<=orderNeuron; k++) {
+            if (orderNetwork->numRelation[k] == t_up) {
+                break;
+            }
+        }
+        for(j=1; j<=orderNeuron; j++) {
+            if (orderNetwork->numRelation[j] == t_up) {
+                break;
+            }
+        }
+    }
+}
+
 void MainWindow::on_pushButtonBip_clicked() {
 
     if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
@@ -230,20 +258,27 @@ void MainWindow::processGrid()
         try {
             stateSenses  [HEARING] = recognize(&neuralSenses[HEARING],sizeNet,characteristicVectorEar,&interface[HEARING],statistics, aux);
             if (ui->checkBox_suma->isChecked()) {
-                if(sum_loop == 0) {
-                    if(interface[HEARING].arrayCategory[0] == '+')
-                        sum_loop = 1;
-                    else {
-                        if(sum_loop==0)
+                if( stateSenses[HEARING] == IS_HIT ){
+                    if(sum_loop == 0) {
+                        if(interface[HEARING].arrayCategory[0] == '+') {
+                            sum_loop = 1;
+                            std::cout<<"SUM LOOP 1"<<endl;
+                        }
+                        else
                             sum_queue->enqueue(adding_up, interface[HEARING].id[0]);
+                    }
+                    else if (sum_loop == 1) {
+                        if(interface[HEARING].arrayCategory[0] == '=')
+                            addition(adding_up, adding_down);
                         else
                             sum_queue->enqueue(adding_down, interface[HEARING].id[0]);
-
                     }
                 }
-                sum_queue->showQueue(adding_up);
-
-
+             else {
+                  sum_queue->clearQueue(adding_down);
+                  sum_queue->clearQueue(adding_up);
+                  std::cout<<"No puedo sumar, debo de conocer ese número primero"<<endl;
+                }
             }
             if (ui->checkBox_cuento->isChecked()) {
                 if( stateSenses[HEARING] == IS_HIT ){
@@ -552,7 +587,7 @@ void MainWindow::aboutBrainCemisid()
     QString university = "Universidad de los Andes, 2013.";
 
 
-    QMessageBox::about(this, tr("Acerca de Proyecto Brain Cemisid J&J V1.0"), "<p align=\"center\">" + title +
+    QMessageBox::about(this, tr("Acerca de Proyecto Brain Cemisid J&J V_R V2.0"), "<p align=\"center\">" + title +
                        version +"</p>"+ "<p align=\"justify\">"+description +"</p>"+"<p align=\"center\">"+ titleProgramer + programer +
                        titleEmail + email + titleTutor + tutor + "<font color = #FF8000>" + university +
                        "</font>" + "</p>");
@@ -832,7 +867,7 @@ void MainWindow::initGui()
     connect(ui->actionQt         ,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
     connect(ui->lineEditEarInput ,SIGNAL(textChanged(QString)),this,SLOT(launchWave()));
     //connect(ui->pushButtonBip ,SIGNAL(clicked())  ,this,SLOT(countProtocol()));
-    connect(ui->pushButton_startCount ,SIGNAL(clicked()), this, SLOT(startCount()));
+    //connect(ui->pushButton_startCount ,SIGNAL(clicked()), this, SLOT(startCount()));
     connect(ui->pushButton_stopCount, SIGNAL(clicked()), this, SLOT(stopCount()));
     connect(ui->pushButton_teachBip ,SIGNAL(clicked())  ,this,SLOT(countProtocol()));
     connect(ui->pushButton_teachClack, SIGNAL(clicked()), this, SLOT(orderProtocol()));
@@ -1362,7 +1397,7 @@ void MainWindow::printCountNetwork() {
 
 void MainWindow::startCount()
 {
-    ui->pushButton_startCount->hide();
+    //ui->pushButton_startCount->hide();
     ui->textBrowser->show();
     ui->pushButton_stopCount->show();
     ui->pushButton_stopCount->show();
@@ -1373,7 +1408,7 @@ void MainWindow::startCount()
 }
 
 void MainWindow::stopCount() {
-    ui->pushButton_startCount->show();
+    //ui->pushButton_startCount->show();
     ui->textBrowser->hide();
     ui->pushButton_stopCount->hide();
     ui->pushButton_stopCount->hide();
