@@ -45,7 +45,8 @@ HEADERS  += Main/mainwindow.h \
     Class/relationNetwork.h \
     Class/countNetwork.h \
     Class/culturalNet.h \
-    Class/sum_queue.h
+    Class/sumNetwork.h \
+    Class/sumQueue.h
 
 FORMS    += Forms/mainwindow.ui \
     Forms/formteaching.ui \

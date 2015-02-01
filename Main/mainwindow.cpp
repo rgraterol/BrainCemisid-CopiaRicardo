@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <algorithm>
 
 //PRUEBA
 //prototyping methods that invoke cuda kernels
@@ -156,30 +157,63 @@ void MainWindow::on_checkBox_cuento_clicked() {
 
 void MainWindow::addition(struct queue &up, struct queue &down) {
     int i = 0;
-    int l_up = sum_queue->queueLenght(up);
-    int l_down = sum_queue->queueLenght(up);
+    int l_up = sumQueue->queueLenght(up);
+    int l_down = sumQueue->queueLenght(down);
     int aux = 0;
     int t_up = 0;
     int t_down = 0;
-
+    int sum_index = 1;
+    bool flag = true;
+    int k = 1;
+    int j = 1;
+    int carry=0;
+    int result_int = 0;
+    int l_result = 0;
+    QString text = "";
+    QString reverse = "";
+    
     if(l_up <= l_down)
         aux = l_up;
     else
         aux = l_down;
+
     while(i < aux) {
-        t_up = sum_queue->dequeue(up)<< endl;
-        t_down = sum_queue->dequeue(down)<< endl;
-        for(k=1; k<=orderNeuron; k++) {
-            if (orderNetwork->numRelation[k] == t_up) {
-                break;
-            }
+        k=1;
+        j=1;
+        t_up = sumQueue->dequeue(up);
+        t_down = sumQueue->dequeue(down);
+        t_up = t_up+carry;
+        carry=0;
+        while(k <= t_up) {
+           sumNetwork->vectorNetworkSum[k] = 1;
+           k++;
         }
-        for(j=1; j<=orderNeuron; j++) {
-            if (orderNetwork->numRelation[j] == t_up) {
-                break;
+        while(j <= t_down) {
+            if(k>9) {
+                k=0;
+                carry=carry+1;
             }
+            sumNetwork->vectorNetworkSum[k] = 1;
+            j++;
+            k++;
         }
+        sumQueue->enqueue(result,k-1);
+        i++;
     }
+    if((t_up + t_down) >= 10)
+        sumQueue->enqueue(result,carry);
+    ui->textBrowser->show();
+    l_result = sumQueue->queueLenght(result);
+    for(j=0; j<l_result; j++) {
+        result_int = sumQueue->dequeue(result);
+        text = text + QString::number(result_int);
+    }
+    for(j=l_result; j>=0; j--) {
+        reverse = reverse + text[j];
+        sumNetwork->vectorNetworkSum[j] = 1;
+    }
+    ui->textBrowser->setText("RESULTADO DE LA SUMA: \n"+reverse);
+
 }
 
 void MainWindow::on_pushButtonBip_clicked() {
@@ -205,6 +239,7 @@ void MainWindow::on_pushButtonBip_clicked() {
 void MainWindow::processGrid()
 {
     clearTables();
+    int k=1;
     //printCountNetwork();
 
     if(!chemicalLayerEye->getNoData())
@@ -262,21 +297,30 @@ void MainWindow::processGrid()
                     if(sum_loop == 0) {
                         if(interface[HEARING].arrayCategory[0] == '+') {
                             sum_loop = 1;
-                            std::cout<<"SUM LOOP 1"<<endl;
                         }
                         else
-                            sum_queue->enqueue(adding_up, interface[HEARING].id[0]);
+                            for(k; k<=orderNeuron; k++) {
+                                if (orderNetwork->numRelation[k] == interface[HEARING].id[0])
+                                    break;
+                            }
+                            sumQueue->enqueue(adding_up, k-1);
                     }
                     else if (sum_loop == 1) {
-                        if(interface[HEARING].arrayCategory[0] == '=')
+                        if(interface[HEARING].arrayCategory[0] == '=') {
                             addition(adding_up, adding_down);
+                            sum_loop = 0;
+                        }
                         else
-                            sum_queue->enqueue(adding_down, interface[HEARING].id[0]);
+                            for(k; k<=orderNeuron; k++) {
+                                if (orderNetwork->numRelation[k] == interface[HEARING].id[0])
+                                    break;
+                            }
+                            sumQueue->enqueue(adding_down, k-1);
                     }
                 }
              else {
-                  sum_queue->clearQueue(adding_down);
-                  sum_queue->clearQueue(adding_up);
+                  sumQueue->clearQueue(adding_down);
+                  sumQueue->clearQueue(adding_up);
                   std::cout<<"No puedo sumar, debo de conocer ese número primero"<<endl;
                 }
             }
@@ -284,8 +328,6 @@ void MainWindow::processGrid()
                 if( stateSenses[HEARING] == IS_HIT ){
                     bool flag = true;
                     int k=0;
-                    //int neurona = findOrderNeuron(orderNetwork, sizeNet, interface[SIGHT].id[0]);
-                    std::cout<<orderNeuron<<endl;
                     for(k=1; k<=orderNeuron; k++) {
                         if (orderNetwork->numRelation[k] == interface[HEARING].id[0]) {
                             std::cout<<"Comienzo a contar"<<endl;
@@ -911,6 +953,8 @@ void MainWindow::setNull()
     adding_up.back = NULL;
     adding_down.foward = NULL;
     adding_down.back = NULL;
+    result.foward = NULL;
+    result.back = NULL;
 }
 
 void MainWindow::createTablesCharacteristic()
@@ -974,6 +1018,10 @@ void MainWindow::intitializeSenses(int numSenses)
     orderNetwork->category = new unsigned char [sizeNet.numNeuron * 32];
     orderNetwork->order = new unsigned char [sizeNet.numNeuron * 32];
     orderNetwork->numRelation = new unsigned char (1);
+
+    sumNetwork = new SumNetwork;
+    sumNetwork->vectorNetworkSum = new unsigned char [sizeNet.numNeuron * 32];
+    sumNetwork->vectorPointerSum = new unsigned char [sizeNet.numNeuron * 9];
 
     for(register int i=0; i<sizeNet.numNeuron; i++) {
         orderNetwork->countNet[i].vectorNetworkCount = new unsigned char [sizeNet.numNeuron * 32];
@@ -1386,9 +1434,6 @@ void MainWindow::actualiceCategory(unsigned char earCat, unsigned char sightid){
 }
 
 
-/*==================================TESIS RICARDO GRATEROL====================================*/
-
-
 void MainWindow::printCountNetwork() {
     for(register int i=0; i<kNeuron ; i++) {
         printf("Neurona: %d\n", countNetwork->vectorNetworkCount[i]);
@@ -1420,23 +1465,6 @@ void MainWindow::stopCount() {
 void MainWindow::countProtocol()
 {
     ui->pushButton_teachClack->setEnabled(true);
-   /*if(kNeuron==0) {
-        orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
-        orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=kNeuron+1;
-    }
-
-    if(kNeuron!=0) {
-        orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
-        orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=kNeuron+1;
-    }
-    if(orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]!=1) {
-        orderNetwork->countNet[orderNeuron].vectorNetworkCount[kNeuron]=1;
-        orderNetwork->countNet[orderNeuron].vectorPointerCount[kNeuron]=orderNeuron+1;
-    }
-    else {
-        std::cout<<"Numero ya Conocido"<<endl;
-    }
-    //activateInterface(false);*/
     if(countNetwork->vectorNetworkCount[kNeuron]== 1) {
         QString cN = QString::number(kNeuron);
         ui->textBrowser->setText("KNOWN BIP");
